@@ -11,3 +11,7 @@ include(FixStaticLink)
 
 project(libcorefungi CXX)
 parse_version(libcorefungi VERSION 0.0.1)
+
+include_directories(include src)
+
+add_executable(unit-test-corefungi src/corefungi/corefungi.cpp)

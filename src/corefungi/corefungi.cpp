@@ -6,5 +6,21 @@
  */
 
 #include "corefungi/corefungi.hpp"
+#include "corefungi/ostream.hpp"
 
-namespace corefungi {}
+#include <iostream>
+
+int main(int argc, char const* argv[])
+{
+    corefungi::node n;
+
+    n = corefungi::dict {
+        { "value", corefungi::value { "bla" } },
+        { "list-value", corefungi::list { "bar", "bar" } },
+        { "dict-value", corefungi::dict { { "bar", "bar" } } }
+    };
+
+    std::cout << n << std::endl;
+
+    return 0;
+}
