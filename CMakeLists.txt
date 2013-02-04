@@ -14,4 +14,5 @@ parse_version(libcorefungi VERSION 0.0.1)
 
 include_directories(include src)
 
-add_executable(unit-test-corefungi src/corefungi/corefungi.cpp)
+file(GLOB_RECURSE COREFUNGI_SOURCES src/corefungi/*.cpp)
+add_executable(unit-test-corefungi ${COREFUNGI_SOURCES})
