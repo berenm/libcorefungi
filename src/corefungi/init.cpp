@@ -85,13 +85,13 @@ namespace corefungi {
   corefungi::node root;
 
   void init(std::string const& program, corefungi::arguments const& arguments) {
-    auto const& application_path = bfs::canonical(bfs::path(program).remove_filename());
-    auto const& application_name = bfs::path(program).stem().string();
+    auto const application_path = bfs::canonical(bfs::path(program).remove_filename());
+    auto const application_name = bfs::path(program).stem().string();
 
-    auto const& config_name   = application_name + ".conf";
-    auto const& system_config = bfs::path("/etc") / config_name;
-    auto const& global_config = expand_user("~") / config_name;
-    auto const& local_config  = application_path / config_name;
+    auto const config_name   = application_name + ".conf";
+    auto const system_config = bfs::path("/etc") / config_name;
+    auto const global_config = expand_user("~") / config_name;
+    auto const local_config  = application_path / config_name;
 
     spore_maker< std::string >(corefungi::root, "command.location") (application_path.string());
     spore_maker< std::string >(corefungi::root, "command.program") (bfs::path(program).stem().string());
