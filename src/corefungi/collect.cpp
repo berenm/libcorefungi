@@ -22,7 +22,7 @@ namespace corefungi {
   corefungi::spore get(std::string const& path, corefungi::node& node) {
     auto const& collection = corefungi::collect(path, node);
 
-    return boost::get< corefungi::spore >(collection.empty() ? node : collection.front());
+    return boost::get< corefungi::spore >(collection.empty() ? node : static_cast< corefungi::node const& >(collection.front()));
   }
 
 }
