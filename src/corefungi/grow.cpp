@@ -40,7 +40,7 @@ namespace corefungi {
 
   }
 
-  corefungi::ref_list grow(std::string const& path, corefungi::node& node) {
+  corefungi::ref_list grow(corefungi::node& node, std::string const& path) {
     auto const mutation = [](std::string const& step, corefungi::node_ref& r, corefungi::ref_list& refs) {
                             if (step.front() == '#')
                               corefungi::grow_list(step, r);
@@ -48,11 +48,11 @@ namespace corefungi {
                               corefungi::grow_dict(step, r);
                           };
 
-    return corefungi::mutate(path, node, mutation);
+    return corefungi::mutate(node, path, mutation);
   }
 
-  void put(std::string const& path, corefungi::spore const& value, corefungi::node& node) {
-    auto refs = corefungi::grow(path, node);
+  void put(corefungi::node& node, std::string const& path, corefungi::spore const& value) {
+    auto refs = corefungi::grow(node, path);
 
     for (auto& r : refs) {
       r = corefungi::value {

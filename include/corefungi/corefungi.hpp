@@ -15,20 +15,28 @@
 namespace corefungi {
   namespace cfg = ::corefungi;
 
-  extern corefungi::node root;
-
   typedef std::vector< std::string > arguments;
   void init(std::string const& program, corefungi::arguments const& arguments);
 
-  corefungi::spore    get(std::string const& path, corefungi::node& node=root);
-  corefungi::ref_list collect(std::string const& path, corefungi::node& node=root);
+  corefungi::ref_list collect(std::string const& path);
+  corefungi::spore    get(std::string const& path);
+  corefungi::spore    get(std::string const& path, corefungi::spore const& default_value);
 
-  void                put(std::string const& path, corefungi::spore const& value, corefungi::node& node=root);
-  corefungi::ref_list grow(std::string const& path, corefungi::node& node=root);
+  corefungi::ref_list collect(corefungi::node& node, std::string const& path);
+  corefungi::spore    get(corefungi::node& node, std::string const& path);
+  corefungi::spore    get(corefungi::node& node, std::string const& path, corefungi::spore const& default_value);
 
-  corefungi::spore_list keys(corefungi::node& node=root);
-  corefungi::ref_list   values(corefungi::node& node=root);
-  corefungi::ref_dict   items(corefungi::node& node=root);
+  corefungi::ref_list grow(corefungi::node& node, std::string const& path);
+  void                put(corefungi::node& node, std::string const& path, corefungi::spore const& value);
+
+  corefungi::spore_list keys(corefungi::node& node);
+  corefungi::ref_list   values(corefungi::node& node);
+  corefungi::ref_dict   items(corefungi::node& node);
+
+  extern corefungi::node_ref system_sprout;
+  extern corefungi::node_ref global_sprout;
+  extern corefungi::node_ref local_sprout;
+  extern corefungi::node_ref command_sprout;
 
 }
 

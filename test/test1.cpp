@@ -21,7 +21,10 @@ int main(int argc, char const* argv[]) {
   }
 
   corefungi::init(program, arguments);
-  std::clog << corefungi::root << std::endl;
+  std::clog << "command: " << corefungi::command_sprout << std::endl;
+  std::clog << "local: " << corefungi::local_sprout << std::endl;
+  std::clog << "global: " << corefungi::global_sprout << std::endl;
+  std::clog << "system: " << corefungi::system_sprout << std::endl;
 
   // *INDENT-OFF*/
   n = corefungi::dict {
@@ -36,12 +39,12 @@ int main(int argc, char const* argv[]) {
   };
  // *INDENT-ON*/
 
-  std::cout << corefungi::collect("*.bar.#0", n) << std::endl;
+  std::cout << corefungi::collect(n, "*.bar.#0") << std::endl;
 
   corefungi::node m;
   std::cout << m << std::endl;
 
-  auto sprinklings = corefungi::grow("foo.#.bla", m);
+  auto sprinklings = corefungi::grow(m, "foo.#.bla");
   std::cout << sprinklings << std::endl;
   for (auto& n : sprinklings) {
     n = "bla";
@@ -49,7 +52,7 @@ int main(int argc, char const* argv[]) {
 
   std::cout << m << std::endl;
 
-  corefungi::put("foo.#.*", "bar", m);
+  corefungi::put(m, "foo.#.*", "bar");
   std::cout << m << std::endl;
 
   for (auto& pair : corefungi::items(n)) {

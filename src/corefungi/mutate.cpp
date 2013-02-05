@@ -27,7 +27,8 @@ namespace corefungi {
 
     static void collect(std::string const& step, corefungi::dict& dict, corefungi::ref_list& refs) {
       if (step != "*") {
-        refs.emplace_back(dict.at(step));
+        if (dict.find(step) != dict.end())
+          refs.emplace_back(dict.at(step));
 
       } else {
         for (auto& pair : dict) {
@@ -38,7 +39,7 @@ namespace corefungi {
 
   }
 
-  corefungi::ref_list mutate(std::string const& path, corefungi::node& node, corefungi::mutator const mutation) {
+  corefungi::ref_list mutate(corefungi::node& node, std::string const& path, corefungi::mutator const mutation) {
     corefungi::ref_list        refs = { node };
     std::vector< std::string > steps;
     boost::split(steps, path, boost::is_any_of("."), boost::token_compress_on);

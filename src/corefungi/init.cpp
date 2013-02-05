@@ -30,11 +30,11 @@ namespace corefungi {
         key(key)
       {}
 
-      void operator()(T const& value) { corefungi::put(this->key, value, this->node); }
+      void operator()(T const& value) { corefungi::put(this->node, this->key, value); }
 
       void operator()(std::vector< T > const& values) {
-        corefungi::grow(this->key + ".#" + std::to_string(values.size() - 1), this->node);
-        auto nodes = corefungi::collect(this->key + ".#", this->node);
+        corefungi::grow(this->node, this->key + ".#" + std::to_string(values.size() - 1));
+        auto nodes = corefungi::collect(this->node, this->key + ".#");
 
         std::copy(values.begin(), values.end(), nodes.begin());
       }
@@ -82,43 +82,42 @@ namespace corefungi {
 
   }
 
-  corefungi::node root;
+  // *INDENT-OFF*/
+  static corefungi::node root = corefungi::dict {
+    { "system", corefungi::node {} },
+    { "global", corefungi::node {} },
+    { "local", corefungi::node {} },
+    { "command", corefungi::node {} }
+  };
+ // *INDENT-ON*/
+
+  corefungi::node_ref system_sprout = corefungi::collect(corefungi::root, "system")[0];
+  corefungi::node_ref global_sprout  = corefungi::collect(corefungi::root, "global")[0];
+  corefungi::node_ref local_sprout   = corefungi::collect(corefungi::root, "local")[0];
+  corefungi::node_ref command_sprout = corefungi::collect(corefungi::root, "command")[0];
 
   void init(std::string const& program, corefungi::arguments const& arguments) {
-    auto const application_path = bfs::canonical(bfs::path(program).remove_filename());
-    auto const application_name = bfs::path(program).stem().string();
+    auto const program_path = bfs::canonical(bfs::path(program).remove_filename());
+    auto const program_name = bfs::path(program).stem().string();
 
-    auto const config_name   = application_name + ".conf";
+    auto const config_name   = program_name + ".conf";
     auto const system_config = bfs::path("/etc") / config_name;
     auto const global_config = expand_user("~") / config_name;
-    auto const local_config  = application_path / config_name;
 
-    spore_maker< std::string >(corefungi::root, "command.location") (application_path.string());
-    spore_maker< std::string >(corefungi::root, "command.program") (bfs::path(program).stem().string());
-    spore_maker< std::string >(corefungi::root, "command.arguments") (arguments);
+    spore_maker< std::string >(corefungi::command_sprout, "program.location") (program_path.string());
+    spore_maker< std::string >(corefungi::command_sprout, "program.name") (program_name);
+    spore_maker< std::string >(corefungi::command_sprout, "program.arguments") (arguments);
 
     if (bfs::exists(system_config))
-      yaml::read(system_config.string(), corefungi::root);
+      yaml::read(system_config.string(), corefungi::system_sprout);
 
     if (bfs::exists(global_config))
-      yaml::read(global_config.string(), corefungi::root);
-
-    if (bfs::exists(local_config))
-      yaml::read(local_config.string(), corefungi::root);
-
-    std::clog << program << " ";
-    for (auto const& argument : arguments) {
-      std::clog << argument << " ";
-    }
-    std::clog << std::endl;
-
-    if (arguments.empty())
-      return;
+      yaml::read(global_config.string(), corefungi::global_sprout);
 
     bpo::options_description generic_options("Generic options");
     generic_options.add_options()
       ("help", "produce help message")
-      ("config,c", spore_maker< std::string >(corefungi::root, "config.file"), "custom configuration file");
+      ("config,c", spore_maker< std::string >(corefungi::command_sprout, "config.file"), "custom configuration file");
 
     bpo::options_description command_line_options;
     command_line_options.add(generic_options);
@@ -128,12 +127,12 @@ namespace corefungi {
     bpo::store(options, vm);
     bpo::notify(vm);
 
-    auto const& config_file = corefungi::get("config.file");
-    if (bfs::extension(config_file) == ".yaml")
-      yaml::read(config_file, corefungi::root);
+    std::string const local_config = corefungi::get("config.file", program_path / config_name);
+    if (bfs::exists(local_config))
+      yaml::read(local_config, corefungi::local_sprout);
 
     if (vm.count("help"))
       std::cout << command_line_options << std::endl;
-  } // init
+  }
 
 }

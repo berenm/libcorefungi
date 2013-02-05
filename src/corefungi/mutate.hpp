@@ -17,7 +17,7 @@ namespace corefungi {
 
   typedef std::function< void (std::string const& step, corefungi::node_ref& r, corefungi::ref_list& refs) > mutator;
 
-  corefungi::ref_list mutate(std::string const& path, corefungi::node& node, corefungi::mutator const mutation);
+  corefungi::ref_list mutate(corefungi::node& node, std::string const& path, corefungi::mutator const mutation);
 
 }
 

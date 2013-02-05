@@ -13,16 +13,59 @@
 
 namespace corefungi {
 
-  corefungi::ref_list collect(std::string const& path, corefungi::node& node) {
+  corefungi::ref_list collect(corefungi::node& node, std::string const& path) {
     auto const mutation = [](std::string const& step, corefungi::node_ref& r, corefungi::ref_list& refs) {};
 
-    return corefungi::mutate(path, node, mutation);
+    return corefungi::mutate(node, path, mutation);
   }
 
-  corefungi::spore get(std::string const& path, corefungi::node& node) {
-    auto const& collection = corefungi::collect(path, node);
+  corefungi::spore get(corefungi::node& node, std::string const& path) {
+    corefungi::node     n;
+    corefungi::ref_list collection = corefungi::collect(node, path);
 
-    return boost::get< corefungi::spore >(collection.empty() ? node : static_cast< corefungi::node const& >(collection.front()));
+    collection.emplace_back(n);
+
+    return boost::get< corefungi::spore >(collection.front());
+  }
+
+  corefungi::spore get(corefungi::node& node, std::string const& path, corefungi::spore const& default_value) {
+    corefungi::node     n          = default_value;
+    corefungi::ref_list collection = corefungi::collect(node, path);
+
+    collection.emplace_back(n);
+
+    return boost::get< corefungi::spore >(collection.front());
+  }
+
+  corefungi::ref_list collect(std::string const& path) {
+    corefungi::ref_list refs;
+
+    for (auto& n : corefungi::ref_list { corefungi::command_sprout, corefungi::local_sprout, corefungi::global_sprout, corefungi::system_sprout }) {
+      try {
+        auto const collection = corefungi::collect(n, path);
+        std::copy(collection.begin(), collection.end(), std::back_inserter(refs));
+      } catch (boost::bad_get const&) {}
+    }
+
+    return refs;
+  }
+
+  corefungi::spore get(std::string const& path) {
+    corefungi::node     n;
+    corefungi::ref_list collection = corefungi::collect(path);
+
+    collection.emplace_back(n);
+
+    return boost::get< corefungi::spore >(collection.front());
+  }
+
+  corefungi::spore get(std::string const& path, corefungi::spore const& default_value) {
+    corefungi::node     n          = default_value;
+    corefungi::ref_list collection = corefungi::collect(path);
+
+    collection.emplace_back(n);
+
+    return boost::get< corefungi::spore >(collection.front());
   }
 
 }
