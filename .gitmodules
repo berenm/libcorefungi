@@ -1,3 +1,6 @@
 [submodule "cmake/extra"]
 	path = cmake/extra
 	url = git://github.com/berenm/cmake-extra.git
+[submodule "lib/yaml-cpp"]
+	path = lib/yaml-cpp
+	url = git://github.com/bminor/yaml-cpp.git

@@ -8,8 +8,7 @@
 #ifndef __COREFUNGI_YAML_PARSER_HPP__
 #define __COREFUNGI_YAML_PARSER_HPP__
 
-#include <boost/property_tree/node.hpp>
-#include <boost/property_tree/detail/file_parser_error.hpp>
+#include "corefungi/corefungi.hpp"
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
@@ -18,17 +17,11 @@ namespace corefungi {
 
   namespace yaml {
 
-    struct parser_error : boost::property_tree::file_parser_error {
-      parser_error(std::string const& message, std::string const& file_name, size_t line) :
-        file_parser_error(message, file_name, line)
-      {}
-    };
-
     corefungi::node read_helper(YAML::Node const& node) {
       if (node.Type() == YAML::NodeType::Map) {
         corefungi::dict v;
-        for (YAML::Iterator child = node.begin(), end = node.end(); child != end; ++child) {
-          v.emplace(corefungi::pair { child.first().to< std::string >(), read_helper(child.second()) });
+        for (YAML::const_iterator it = node.begin(), end = node.end(); it != end; ++it) {
+          v.emplace(corefungi::pair { it->first.as< std::string >(), read_helper(it->second) });
         }
 
         return v;
@@ -43,13 +36,13 @@ namespace corefungi {
         return v;
       }
 
-      return node.to< std::string >();
+      if (node.Type() == YAML::NodeType::Scalar)
+        return node.as< std::string >();
+
+      return corefungi::node {};
     } // read_helper
 
     void read_internal(std::istream& stream, corefungi::node& n, std::string const& file_name) {
-      YAML::Parser parser(stream);
-      YAML::Node   document;
-
       n = read_helper(YAML::Load(stream));
     }
 
@@ -61,7 +54,7 @@ namespace corefungi {
       std::ifstream stream(file_name.c_str());
 
       if (!stream)
-        throw parser_error("cannot open file", file_name, 0);
+        throw std::runtime_error("cannot open file: " + file_name);
 
       read_internal(stream, n, file_name);
     }
@@ -127,7 +120,7 @@ namespace corefungi {
 
       stream << out.c_str();
       if (!stream.good())
-        throw parser_error("write error", file_name, 0);
+        throw std::runtime_error("write error: " + file_name);
     }
 
     void write(std::ostream& stream, corefungi::node const& node) {
@@ -138,7 +131,7 @@ namespace corefungi {
       std::ofstream stream(file_name.c_str());
 
       if (!stream)
-        throw parser_error("cannot open file", file_name, 0);
+        throw std::runtime_error("cannot open file: " + file_name);
 
       write_internal(stream, node, file_name);
     }

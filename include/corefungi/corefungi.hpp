@@ -17,8 +17,14 @@ namespace corefungi {
 
   extern corefungi::node root;
 
+  typedef std::vector< std::string > arguments;
+  void init(std::string const& program, corefungi::arguments const& arguments);
+
   corefungi::spore    get(std::string const& path, corefungi::node& node=root);
   corefungi::ref_list collect(std::string const& path, corefungi::node& node=root);
+
+  void                put(std::string const& path, corefungi::spore const& value, corefungi::node& node=root);
+  corefungi::ref_list grow(std::string const& path, corefungi::node& node=root);
 
   corefungi::spore_list keys(corefungi::node& node=root);
   corefungi::ref_list   values(corefungi::node& node=root);

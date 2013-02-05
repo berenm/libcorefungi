@@ -20,12 +20,15 @@ namespace corefungi {
     spore()             = default;
     spore(spore const&) = default;
 
-    template< typename T > spore(T const& t) : std::string(boost::lexical_cast< std::string >(t)) {}
+    spore(char const* s) :        std::string(s) {}
+    spore(std::string const& s) : std::string(s) {}
+
+    template< typename T > explicit spore(T const& t) : std::string(boost::lexical_cast< std::string >(t)) {}
     template< typename T > operator T() const { return boost::lexical_cast< T >(*this); }
   };
 
   template< typename Cr, typename Tr >
-  static inline std::basic_ostream< Cr, Tr >& operator<<(std::basic_ostream< Cr, Tr >& s, spore const& sp) {
+  static inline std::basic_ostream< Cr, Tr >& operator<<(std::basic_ostream< Cr, Tr >& s, corefungi::spore const& sp) {
     s << static_cast< std::string >(sp);
 
     return s;

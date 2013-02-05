@@ -24,7 +24,10 @@ namespace corefungi {
       node_ref& operator=(corefungi::node_ref const& o) = default;
 
       node_ref(corefungi::node& node) : ref(&node) {}
-      node_ref& operator=(corefungi::node& node) { this->ref = &node; }
+      node_ref& operator=(corefungi::node& node) { this->ref = &node; return *this; }
+
+      template< typename T >
+      node_ref& operator=(T const& t) { this->ref->operator=(t); return *this; }
 
       operator node&() { return *this->ref; }
       operator node const&() const { return *this->ref; }
@@ -34,7 +37,7 @@ namespace corefungi {
   };
 
   template< typename Cr, typename Tr >
-  static inline std::basic_ostream< Cr, Tr >& operator<<(std::basic_ostream< Cr, Tr >& s, node_ref const& r) {
+  static inline std::basic_ostream< Cr, Tr >& operator<<(std::basic_ostream< Cr, Tr >& s, corefungi::node_ref const& r) {
     s << static_cast< corefungi::node const& >(r);
 
     return s;
@@ -42,7 +45,7 @@ namespace corefungi {
 
   typedef std::vector< corefungi::node_ref >                          ref_list;
   typedef std::unordered_map< corefungi::spore, corefungi::node_ref > ref_dict;
-  typedef ref_dict::value_type                                        ref_pair;
+  typedef corefungi::ref_dict::value_type                             ref_pair;
 
 }
 

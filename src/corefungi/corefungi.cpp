@@ -13,6 +13,16 @@
 int main(int argc, char const* argv[]) {
   corefungi::node n;
 
+  std::string                program = argv[0];
+  std::vector< std::string > arguments;
+
+  for (size_t i = 1; i < argc; ++i) {
+    arguments.push_back(argv[i]);
+  }
+
+  corefungi::init(program, arguments);
+  std::clog << corefungi::root << std::endl;
+
   // *INDENT-OFF*/
   n = corefungi::dict {
     { "value", corefungi::value { "bla" } },
@@ -27,6 +37,20 @@ int main(int argc, char const* argv[]) {
  // *INDENT-ON*/
 
   std::cout << corefungi::collect("*.bar.#0", n) << std::endl;
+
+  corefungi::node m;
+  std::cout << m << std::endl;
+
+  auto sprinklings = corefungi::grow("foo.#.bla", m);
+  std::cout << sprinklings << std::endl;
+  for (auto& n : sprinklings) {
+    n = "bla";
+  }
+
+  std::cout << m << std::endl;
+
+  corefungi::put("foo.#.*", "bar", m);
+  std::cout << m << std::endl;
 
   // for (auto const& pair : corefungi::items(n)) {
   // std::cout << pair->first << ": " << pair->second << std::endl;
@@ -54,4 +78,4 @@ int main(int argc, char const* argv[]) {
   // size_t           v2  = sp2;
 
   return 0;
-}
+} // main

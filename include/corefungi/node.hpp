@@ -26,7 +26,7 @@ namespace corefungi {
   typedef boost::mpl::at_c< node::types, 0 >::type value;
   typedef boost::mpl::at_c< node::types, 1 >::type list;
   typedef boost::mpl::at_c< node::types, 2 >::type dict;
-  typedef dict::value_type                         pair;
+  typedef corefungi::dict::value_type              pair;
 
   template< typename T > static inline bool is_a(corefungi::node const& n) { return n.type() == typeid(T); }
 
