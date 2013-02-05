@@ -8,8 +8,8 @@ compiler:
   - gcc
 before_install:
   - sudo apt-add-repository --yes ppa:mapnik/boost
-  - echo "Updating APT database..." && sudo apt-get update --quiet --quiet
-  - echo "Updating GCC and Boost..." && sudo apt-get install --quiet --quiet
+  - sudo apt-get update --quiet --quiet
+  - sudo apt-get install --quiet --quiet
     gcc-snapshot libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev 
     libboost-filesystem1.49-dev libboost-graph1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev
     libboost-math1.49-dev libboost-program-options1.49-dev libboost-python1.49-dev libboost-random1.49-dev
