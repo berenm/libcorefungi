@@ -21,8 +21,39 @@ link_directories(${Boost_LIBRARY_DIRS})
 add_submodule(yaml-cpp git://github.com/bminor/yaml-cpp.git lib/yaml-cpp TAG release-0.5.0 INCLUDE_DIRS include)
 
 
+# -------------------------------------------------------------------------
+# libcorefungi
 include_directories(include src)
 
-file(GLOB_RECURSE COREFUNGI_SOURCES src/corefungi/*.cpp)
-add_executable(unit-test-corefungi ${COREFUNGI_SOURCES})
-target_link_libraries(unit-test-corefungi yaml-cpp ${Boost_LIBRARIES})
+file(GLOB_RECURSE libcorefungi_SOURCES src/*.cpp)
+add_library(corefungi
+  ${libcorefungi_SOURCES}
+  ${boost-log_SOURCES}
+)
+set_target_properties(corefungi PROPERTIES
+  VERSION   ${libcorefungi_VERSION}
+  SOVERSION ${libcorefungi_SOVERSION}
+  SONAME    libcorefungi${libcorefungi_SOVERSION}
+)
+target_link_libraries(corefungi yaml-cpp ${Boost_LIBRARIES})
+
+# -------------------------------------------------------------------------
+# installation
+install(TARGETS corefungi
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+install(DIRECTORY include/corefungi
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# -------------------------------------------------------------------------
+# tests
+if(BUILD_TESTS)
+  enable_testing()
+
+  add_executable(unit-test-corefungi test/test1.cpp)
+  target_link_libraries(unit-test-corefungi corefungi)
+  add_test(unit-test-corefungi unit-test-corefungi)
+endif()
