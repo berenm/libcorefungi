@@ -16,6 +16,8 @@
 
 namespace corefungi {
 
+  template< typename T > struct is_node : std::false_type {};
+
   struct spore : std::string {
     spore()             = default;
     spore(spore const&) = default;
@@ -23,8 +25,10 @@ namespace corefungi {
     spore(char const* s) :        std::string(s) {}
     spore(std::string const& s) : std::string(s) {}
 
-    template< typename T > explicit spore(T const& t) : std::string(boost::lexical_cast< std::string >(t)) {}
-    template< typename T > operator T() const { return boost::lexical_cast< T >(*this); }
+    template< typename T > spore(T const& t) : std::string(boost::lexical_cast< std::string >(t)) {}
+
+    template< typename T, typename boost::enable_if_c< !corefungi::is_node< T >::value, int >::type = 0 >
+    operator T() const { return boost::lexical_cast< T >(*this); }
   };
 
   template< typename Cr, typename Tr >

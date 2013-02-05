@@ -35,15 +35,15 @@ namespace corefungi {
       return o;
     }
 
-    corefungi::ref_dict items(corefungi::node& node) {
-      return corefungi::transform(boost::get< corefungi::dict >(node),
-                                  std::function< corefungi::ref_pair(corefungi::dict::value_type&) > {
-                                    [](corefungi::dict::value_type& v) -> corefungi::ref_pair {
-                                      return std::make_pair(v.first, corefungi::node_ref(v.second));
-                                    }
-                                  });
-    }
+  }
 
+  corefungi::ref_dict items(corefungi::node& node) {
+    return corefungi::transform(boost::get< corefungi::dict >(node),
+                                std::function< corefungi::ref_pair(corefungi::dict::value_type&) > {
+                                  [](corefungi::dict::value_type& v) -> corefungi::ref_pair {
+                                    return std::make_pair(v.first, corefungi::node_ref(v.second));
+                                  }
+                                });
   }
 
   corefungi::spore_list keys(corefungi::node& node) {

@@ -52,30 +52,40 @@ int main(int argc, char const* argv[]) {
   corefungi::put("foo.#.*", "bar", m);
   std::cout << m << std::endl;
 
-  // for (auto const& pair : corefungi::items(n)) {
-  // std::cout << pair->first << ": " << pair->second << std::endl;
-  // }
+  for (auto& pair : corefungi::items(n)) {
+  std::cout << pair.first << ": " << pair.second << std::endl;
+  }
 
-  // for (auto const& key : corefungi::keys(n)) {
-  // std::cout << key << std::endl;
-  // }
+  for (auto& key : corefungi::keys(n)) {
+  std::cout << key << std::endl;
+  }
 
-  // for (auto const& value : corefungi::values(n)) {
-  // std::cout << *value << std::endl;
-  // }
+  for (auto& value : corefungi::values(n)) {
+  std::cout << value << std::endl;
+  }
 
-  // std::cout << n << std::endl;
+  std::cout << n << std::endl;
 
-  // corefungi::spore sp = corefungi::list {
-  // "bar", "bar"
-  // };
-  // std::cout << sp << std::endl;
-  // size_t v = sp;
+  try {
+    corefungi::spore sp = corefungi::list {
+    "bar", "bar"
+    };
+    std::cout << sp << std::endl;
+    size_t v = sp;
 
-  // std::cout << sp << ": " << v << std::endl;
+    std::cout << sp << ": " << v << std::endl;
+  } catch(std::exception const& e) {
+    std::clog << "Exception raised: " << e.what() << std::endl;
+  }
 
-  // corefungi::spore sp2 = "test";
-  // size_t           v2  = sp2;
+  try {
+    corefungi::spore sp = "0";
+    size_t           v  = sp;
+
+    std::cout << sp << ": " << v << std::endl;
+  } catch(std::exception const& e) {
+    std::clog << "Exception raised: " << e.what() << std::endl;
+  }
 
   return 0;
 } // main
