@@ -2,9 +2,8 @@ language: cpp
 script:
   - mkdir build
   - cd build
-  - cmake -DBUILD_TESTS=1 -DCMAKE_CXX_FLAGS="-iprefix /usr/lib/gcc-snapshot" .. && make && make test
+  - cmake -DBUILD_TESTS=1 .. && make && make test
 compiler:
-  - clang
   - gcc
 before_install:
   - sudo apt-add-repository --yes ppa:mapnik/boost
