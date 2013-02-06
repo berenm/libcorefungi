@@ -13,6 +13,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 
+#include "corefungi/prefix.hpp"
 #include "corefungi/yaml_parser.hpp"
 
 #include <iostream>
@@ -51,7 +52,7 @@ namespace corefungi {
       std::string const   key;
     };
 
-    static bfs::path expand_user(std::string const& path) {
+    static bfs::path expand(std::string const& path) {
       if (path.empty())
         return bfs::path();
 
@@ -77,8 +78,19 @@ namespace corefungi {
       else if (homedrive && homepath)
         modified.replace(0, 1, std::string(homedrive) + std::string(homepath));
 
-      return bfs::path(modified);
+      return corefungi::expand(modified);
     }
+
+    static bfs::path default_dir = corefungi::expand("~") / ".config";
+    static bfs::path system_path = bfs::path(corefungi::install_prefix == "/usr" ? "/" : corefungi::install_prefix) / "etc";
+
+    static std::unordered_map< std::string, bfs::path > global_paths = {
+      { "linux",  std::getenv("XDG_CONFIG") ? bfs::path(std::getenv("XDG_CONFIG")) : default_dir },
+      { "Win32",  std::getenv("APPDATA") ? bfs::path(std::getenv("APPDATA")) : default_dir       },
+      { "Mac OS", corefungi::expand("~") / "Library" / "Preferences"                             }
+    };
+
+    static bfs::path global_path = global_paths.find(BOOST_PLATFORM) == global_paths.end() ? default_dir : global_paths[BOOST_PLATFORM];
 
   }
 
@@ -101,8 +113,8 @@ namespace corefungi {
     auto const program_name = bfs::path(program).stem().string();
 
     auto const config_name   = program_name + ".conf";
-    auto const system_config = bfs::path("/etc") / config_name;
-    auto const global_config = expand_user("~") / config_name;
+    auto const system_config = system_path / program_name / config_name;
+    auto const global_config = global_path / program_name / config_name;
 
     spore_maker< std::string >(corefungi::command_sprout, "program.location") (program_path.string());
     spore_maker< std::string >(corefungi::command_sprout, "program.name") (program_name);
@@ -127,7 +139,7 @@ namespace corefungi {
     bpo::store(options, vm);
     bpo::notify(vm);
 
-    std::string const local_config = corefungi::get("config.file", program_path / config_name);
+    std::string const local_config = corefungi::get("config.file", (program_path / config_name).string());
     if (bfs::exists(local_config))
       yaml::read(local_config, corefungi::local_sprout);
 
