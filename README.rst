@@ -8,7 +8,7 @@ Core Fungi: C++11 simple configuration library.
 
 USAGE
 ````````````````````````````
-TBD
+TBW
 
 
 COPYING INFORMATION
