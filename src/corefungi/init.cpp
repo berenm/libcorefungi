@@ -5,7 +5,7 @@
  * See accompanying file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt
  */
 
-#include "corefungi/corefungi.hpp"
+#include "corefungi.hpp"
 
 #include <cstdlib>
 
@@ -128,7 +128,7 @@ namespace corefungi {
 
     bpo::options_description generic_options("Generic options");
     generic_options.add_options()
-      ("help", "produce help message")
+      ("help,h", "produce help message")
       ("config,c", spore_maker< std::string >(corefungi::command_sprout, "config.file"), "custom configuration file");
 
     bpo::options_description command_line_options;

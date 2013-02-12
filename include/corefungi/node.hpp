@@ -8,7 +8,6 @@
 #ifndef __COREFUNGI_NODE_HPP__
 #define __COREFUNGI_NODE_HPP__
 
-#include <string>
 #include <vector>
 #include <unordered_map>
 
@@ -18,18 +17,21 @@
 #include "corefungi/spore.hpp"
 
 namespace corefungi {
+  namespace cfg = ::corefungi;
 
-  typedef boost::make_recursive_variant< corefungi::spore,
+  typedef boost::make_recursive_variant< cfg::spore,
                                          std::vector< boost::recursive_variant_ >,
-                                         std::unordered_map< corefungi::spore, boost::recursive_variant_ >
+                                         std::unordered_map< cfg::spore, boost::recursive_variant_ >
                                          >::type node;
   typedef boost::mpl::at_c< node::types, 0 >::type value;
   typedef boost::mpl::at_c< node::types, 1 >::type list;
   typedef boost::mpl::at_c< node::types, 2 >::type dict;
-  typedef corefungi::dict::value_type              pair;
+  typedef cfg::dict::value_type                    pair;
 
-  template< > struct is_node< corefungi::node > : std::true_type {};
-  template< typename T > static inline bool is_a(corefungi::node const& n) { return n.type() == typeid(T); }
+  /** forbid conversion from spore to node, as a node is already constructible from a spore */
+  template< > struct is_spore_convertible< cfg::node > : std::false_type {};
+
+  template< typename T > static inline bool is_a(cfg::node const& n) { return n.type() == typeid(T); }
 
 }
 

@@ -5,8 +5,8 @@
  * See accompanying file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt
  */
 
-#include "corefungi/corefungi.hpp"
-#include "corefungi/ostream.hpp"
+#include "corefungi.hpp"
+#include "ostream.hpp"
 
 #include <iostream>
 
@@ -56,28 +56,28 @@ int main(int argc, char const* argv[]) {
   std::cout << m << std::endl;
 
   for (auto& pair : corefungi::items(n)) {
-  std::cout << pair.first << ": " << pair.second << std::endl;
+    std::cout << pair.first << ": " << pair.second << std::endl;
   }
 
   for (auto& key : corefungi::keys(n)) {
-  std::cout << key << std::endl;
+    std::cout << key << std::endl;
   }
 
   for (auto& value : corefungi::values(n)) {
-  std::cout << value << std::endl;
+    std::cout << value << std::endl;
   }
 
   std::cout << n << std::endl;
 
   try {
     corefungi::spore sp = corefungi::list {
-    "bar", "bar"
+      "bar", "bar"
     };
     std::cout << sp << std::endl;
     size_t v = sp;
 
     std::cout << sp << ": " << v << std::endl;
-  } catch(std::exception const& e) {
+  } catch (std::exception const& e) {
     std::clog << "Exception raised: " << e.what() << std::endl;
   }
 
@@ -86,7 +86,7 @@ int main(int argc, char const* argv[]) {
     size_t           v  = sp;
 
     std::cout << sp << ": " << v << std::endl;
-  } catch(std::exception const& e) {
+  } catch (std::exception const& e) {
     std::clog << "Exception raised: " << e.what() << std::endl;
   }
 

@@ -15,30 +15,40 @@
 #include <boost/lexical_cast.hpp>
 
 namespace corefungi {
+  namespace cfg = ::corefungi;
 
-  template< typename T > struct is_node : std::false_type {};
+  template< typename T > struct is_spore_convertible : std::true_type {};
+  template< typename T > using if_spore_convertible = boost::enable_if_c< cfg::is_spore_convertible< T >::value, bool >;
 
+  /** no need to lexically convert from a spore to string, a spore is already a std::string */
+  template< > struct is_spore_convertible< std::string > : std::false_type {};
+
+  /**
+   * @brief opt-out string convertible structure.
+   * - represent any serializable type in its string form, using boost::lexical_cast, or ostream operators.
+   * - parse back any deserializable type from its string form, using using boost::lexical_cast, or istream operators.
+   */
   struct spore : std::string {
     spore()             = default;
     spore(spore const&) = default;
 
+    template< typename T >
+    spore(T const& t) :           std::string(boost::lexical_cast< std::string >(t)) {}
     spore(char const* s) :        std::string(s) {}
     spore(std::string const& s) : std::string(s) {}
 
-    template< typename T > spore(T const& t) : std::string(boost::lexical_cast< std::string >(t)) {}
-
-    template< typename T, typename boost::enable_if_c< !corefungi::is_node< T >::value, int >::type = 0 >
-    operator T() const { return boost::lexical_cast< T >(*this); }
+    template< typename T, typename cfg::if_spore_convertible< T >::type = true >
+    operator T() const { return boost::lexical_cast< T >(static_cast< std::string >(*this)); }
   };
 
   template< typename Cr, typename Tr >
-  static inline std::basic_ostream< Cr, Tr >& operator<<(std::basic_ostream< Cr, Tr >& s, corefungi::spore const& sp) {
+  static inline std::basic_ostream< Cr, Tr >& operator<<(std::basic_ostream< Cr, Tr >& s, cfg::spore const& sp) {
     s << static_cast< std::string >(sp);
 
     return s;
   }
 
-  typedef std::vector< corefungi::spore > spore_list;
+  typedef std::vector< cfg::spore > spore_list;
 
 }
 

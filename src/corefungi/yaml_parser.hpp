@@ -8,7 +8,7 @@
 #ifndef __COREFUNGI_YAML_PARSER_HPP__
 #define __COREFUNGI_YAML_PARSER_HPP__
 
-#include "corefungi/corefungi.hpp"
+#include "corefungi.hpp"
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
