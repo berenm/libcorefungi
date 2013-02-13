@@ -10,6 +10,7 @@
 #include <type_traits>
 
 namespace corefungi {
+  namespace cfg = ::corefungi;
 
   namespace {
 
@@ -37,31 +38,31 @@ namespace corefungi {
 
   }
 
-  corefungi::ref_dict items(corefungi::node& node) {
-    return corefungi::transform(boost::get< corefungi::dict >(node),
-                                std::function< corefungi::ref_pair(corefungi::dict::value_type&) > {
-                                  [](corefungi::dict::value_type& v) -> corefungi::ref_pair {
-                                    return std::make_pair(v.first, corefungi::node_ref(v.second));
-                                  }
-                                });
+  cfg::ref_dict items(cfg::node& node) {
+    return cfg::transform(boost::get< cfg::dict >(node),
+                          std::function< cfg::ref_pair(cfg::dict::value_type&) > {
+                            [](cfg::dict::value_type& v) -> cfg::ref_pair {
+                              return std::make_pair(v.first, cfg::node_ref(v.second));
+                            }
+                          });
   }
 
-  corefungi::spore_list keys(corefungi::node& node) {
-    return corefungi::transform(boost::get< corefungi::dict >(node),
-                                std::function< corefungi::spore(corefungi::dict::value_type&) > {
-                                  [](corefungi::dict::value_type& v) -> corefungi::spore {
-                                    return v.first;
-                                  }
-                                });
+  cfg::spore_list keys(cfg::node& node) {
+    return cfg::transform(boost::get< cfg::dict >(node),
+                          std::function< cfg::spore(cfg::dict::value_type&) > {
+                            [](cfg::dict::value_type& v) -> cfg::spore {
+                              return v.first;
+                            }
+                          });
   }
 
-  corefungi::ref_list values(corefungi::node& node) {
-    return corefungi::transform(boost::get< corefungi::dict >(node),
-                                std::function< corefungi::node_ref(corefungi::dict::value_type&) > {
-                                  [](corefungi::dict::value_type& v) -> corefungi::node_ref {
-                                    return v.second;
-                                  }
-                                });
+  cfg::ref_list values(cfg::node& node) {
+    return cfg::transform(boost::get< cfg::dict >(node),
+                          std::function< cfg::node_ref(cfg::dict::value_type&) > {
+                            [](cfg::dict::value_type& v) -> cfg::node_ref {
+                              return v.second;
+                            }
+                          });
   }
 
 }

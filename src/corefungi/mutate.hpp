@@ -14,10 +14,11 @@
 #include <string>
 
 namespace corefungi {
+  namespace cfg = ::corefungi;
 
-  typedef std::function< void (std::string const& step, corefungi::node_ref& r, corefungi::ref_list& refs) > mutator;
+  typedef std::function< void (std::string const& step, cfg::node_ref& r, cfg::ref_list& refs) > mutator;
 
-  corefungi::ref_list mutate(corefungi::node& node, std::string const& path, corefungi::mutator const mutation);
+  cfg::ref_list mutate(cfg::node& node, std::string const& path, cfg::mutator const mutation);
 
 }
 

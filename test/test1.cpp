@@ -11,7 +11,9 @@
 #include <iostream>
 
 int main(int argc, char const* argv[]) {
-  corefungi::node n;
+  namespace cfg = ::corefungi;
+
+  cfg::node n;
 
   std::string                program = argv[0];
   std::vector< std::string > arguments;
@@ -20,31 +22,31 @@ int main(int argc, char const* argv[]) {
     arguments.push_back(argv[i]);
   }
 
-  corefungi::init(program, arguments);
-  std::clog << "command: " << corefungi::command_sprout << std::endl;
-  std::clog << "local: " << corefungi::local_sprout << std::endl;
-  std::clog << "global: " << corefungi::global_sprout << std::endl;
-  std::clog << "system: " << corefungi::system_sprout << std::endl;
+  cfg::init(program, arguments);
+  std::clog << "command: " << cfg::command_sprout << std::endl;
+  std::clog << "local: " << cfg::local_sprout << std::endl;
+  std::clog << "global: " << cfg::global_sprout << std::endl;
+  std::clog << "system: " << cfg::system_sprout << std::endl;
 
   // *INDENT-OFF*/
-  n = corefungi::dict {
-    { "value", corefungi::value { "bla" } },
-    { "list-value", corefungi::list { "bar", "bar" } },
-    { "dict-value", corefungi::dict { { "bar", "bar" } } },
+  n = cfg::dict {
+    { "value", cfg::value { "bla" } },
+    { "list-value", cfg::list { "bar", "bar" } },
+    { "dict-value", cfg::dict { { "bar", "bar" } } },
     { "dict-value-2",
-      corefungi::dict {
-        { "bar", corefungi::list { "bar0", "bar1" } }
+      cfg::dict {
+        { "bar", cfg::list { "bar0", "bar1" } }
       }
     }
   };
  // *INDENT-ON*/
 
-  std::cout << corefungi::collect(n, "*.bar.#0") << std::endl;
+  std::cout << cfg::collect(n, "*.bar.#0") << std::endl;
 
-  corefungi::node m;
+  cfg::node m;
   std::cout << m << std::endl;
 
-  auto sprinklings = corefungi::grow(m, "foo.#.bla");
+  auto sprinklings = cfg::grow(m, "foo.#.bla");
   std::cout << sprinklings << std::endl;
   for (auto& n : sprinklings) {
     n = "bla";
@@ -52,25 +54,25 @@ int main(int argc, char const* argv[]) {
 
   std::cout << m << std::endl;
 
-  corefungi::put(m, "foo.#.*", "bar");
+  cfg::put(m, "foo.#.*", "bar");
   std::cout << m << std::endl;
 
-  for (auto& pair : corefungi::items(n)) {
+  for (auto& pair : cfg::items(n)) {
     std::cout << pair.first << ": " << pair.second << std::endl;
   }
 
-  for (auto& key : corefungi::keys(n)) {
+  for (auto& key : cfg::keys(n)) {
     std::cout << key << std::endl;
   }
 
-  for (auto& value : corefungi::values(n)) {
+  for (auto& value : cfg::values(n)) {
     std::cout << value << std::endl;
   }
 
   std::cout << n << std::endl;
 
   try {
-    corefungi::spore sp = corefungi::list {
+    cfg::spore sp = cfg::list {
       "bar", "bar"
     };
     std::cout << sp << std::endl;
@@ -82,8 +84,8 @@ int main(int argc, char const* argv[]) {
   }
 
   try {
-    corefungi::spore sp = "0";
-    size_t           v  = sp;
+    cfg::spore sp = "0";
+    size_t     v  = sp;
 
     std::cout << sp << ": " << v << std::endl;
   } catch (std::exception const& e) {

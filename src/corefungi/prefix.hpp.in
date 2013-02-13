@@ -9,6 +9,7 @@
 #define __COREFUNGI_PREFIX_HPP_IN__
 
 namespace corefungi {
+  namespace cfg = ::corefungi;
 
   static std::string const install_prefix = "${CMAKE_INSTALL_PREFIX}";
 

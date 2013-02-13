@@ -10,10 +10,11 @@
 #include <boost/algorithm/string.hpp>
 
 namespace corefungi {
+  namespace cfg = ::corefungi;
 
   namespace {
 
-    static void collect(std::string const& step, corefungi::list& list, corefungi::ref_list& refs) {
+    static void collect(std::string const& step, cfg::list& list, cfg::ref_list& refs) {
       if (step.size() > 1) {
         size_t const index = boost::lexical_cast< size_t >(step.substr(1));
         refs.emplace_back(list[index]);
@@ -25,7 +26,7 @@ namespace corefungi {
       }
     }
 
-    static void collect(std::string const& step, corefungi::dict& dict, corefungi::ref_list& refs) {
+    static void collect(std::string const& step, cfg::dict& dict, cfg::ref_list& refs) {
       if (step != "*") {
         if (dict.find(step) != dict.end())
           refs.emplace_back(dict.at(step));
@@ -39,21 +40,21 @@ namespace corefungi {
 
   }
 
-  corefungi::ref_list mutate(corefungi::node& node, std::string const& path, corefungi::mutator const mutation) {
-    corefungi::ref_list        refs = { node };
+  cfg::ref_list mutate(cfg::node& node, std::string const& path, cfg::mutator const mutation) {
+    cfg::ref_list              refs = { node };
     std::vector< std::string > steps;
     boost::split(steps, path, boost::is_any_of("."), boost::token_compress_on);
 
     for (auto const& step : steps) {
-      corefungi::ref_list subrefs = {};
+      cfg::ref_list subrefs = {};
       for (auto& r : refs) {
         mutation(step, r, subrefs);
 
         try {
           if (step.front() == '#')
-            corefungi::collect(step, boost::get< corefungi::list >(r), subrefs);
+            cfg::collect(step, boost::get< cfg::list >(r), subrefs);
           else
-            corefungi::collect(step, boost::get< corefungi::dict >(r), subrefs);
+            cfg::collect(step, boost::get< cfg::dict >(r), subrefs);
         } catch (boost::bad_get const&) {}
       }
       refs = std::move(subrefs);

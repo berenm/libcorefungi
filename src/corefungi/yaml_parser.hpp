@@ -14,21 +14,22 @@
 #include <fstream>
 
 namespace corefungi {
+  namespace cfg = ::corefungi;
 
   namespace yaml {
 
-    corefungi::node read_helper(YAML::Node const& node) {
+    cfg::node read_helper(YAML::Node const& node) {
       if (node.Type() == YAML::NodeType::Map) {
-        corefungi::dict v;
+        cfg::dict v;
         for (YAML::const_iterator it = node.begin(), end = node.end(); it != end; ++it) {
-          v.emplace(corefungi::pair { it->first.as< std::string >(), read_helper(it->second) });
+          v.emplace(cfg::pair { it->first.as< std::string >(), read_helper(it->second) });
         }
 
         return v;
       }
 
       if (node.Type() == YAML::NodeType::Sequence) {
-        corefungi::list v;
+        cfg::list v;
         for (auto const& child : node) {
           v.emplace_back(read_helper(child));
         }
@@ -39,18 +40,18 @@ namespace corefungi {
       if (node.Type() == YAML::NodeType::Scalar)
         return node.as< std::string >();
 
-      return corefungi::node {};
+      return cfg::node {};
     } // read_helper
 
-    void read_internal(std::istream& stream, corefungi::node& n, std::string const& file_name) {
+    void read_internal(std::istream& stream, cfg::node& n, std::string const& file_name) {
       n = read_helper(YAML::Load(stream));
     }
 
-    void read(std::istream& stream, corefungi::node& n) {
+    void read(std::istream& stream, cfg::node& n) {
       read_internal(stream, n, "<stream>");
     }
 
-    void read(std::string const& file_name, corefungi::node& n) {
+    void read(std::string const& file_name, cfg::node& n) {
       std::ifstream stream(file_name.c_str());
 
       if (!stream)
@@ -59,7 +60,7 @@ namespace corefungi {
       read_internal(stream, n, file_name);
     }
 
-    void write_helper(YAML::Emitter& stream, corefungi::node const& node) {
+    void write_helper(YAML::Emitter& stream, cfg::node const& node) {
       if (is_a< spore >(node)) {
         spore const& v = boost::get< spore >(node);
 
@@ -111,7 +112,7 @@ namespace corefungi {
       }
     } // write_helper
 
-    void write_internal(std::ostream& stream, corefungi::node const& node, std::string const& file_name) {
+    void write_internal(std::ostream& stream, cfg::node const& node, std::string const& file_name) {
       YAML::Emitter out;
 
       out << YAML::BeginDoc;
@@ -123,11 +124,11 @@ namespace corefungi {
         throw std::runtime_error("write error: " + file_name);
     }
 
-    void write(std::ostream& stream, corefungi::node const& node) {
+    void write(std::ostream& stream, cfg::node const& node) {
       write_internal(stream, node, "<stream>");
     }
 
-    void write(std::string const& file_name, corefungi::node const& node) {
+    void write(std::string const& file_name, cfg::node const& node) {
       std::ofstream stream(file_name.c_str());
 
       if (!stream)
