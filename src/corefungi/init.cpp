@@ -97,10 +97,10 @@ namespace corefungi {
 
   // *INDENT-OFF*/
   static cfg::node root = cfg::dict {
-    { "system", cfg::node {} },
-    { "global", cfg::node {} },
-    { "local", cfg::node {} },
-    { "command", cfg::node {} }
+    { "system", cfg::node() },
+    { "global", cfg::node() },
+    { "local", cfg::node() },
+    { "command", cfg::node() }
   };
  // *INDENT-ON*/
 

@@ -12,7 +12,7 @@ namespace corefungi {
   namespace cfg = ::corefungi;
 
   cfg::ref_list collect(cfg::node& node, std::string const& path) {
-    auto const mutation = [](std::string const& step, cfg::node_ref& r, cfg::ref_list& refs) {};
+    auto const mutation = [](cfg::node& node, std::string const& step) {};
 
     return cfg::mutate(node, path, mutation);
   }

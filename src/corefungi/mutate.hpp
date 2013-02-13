@@ -11,12 +11,10 @@
 #include "corefungi/node.hpp"
 #include "corefungi/node_ref.hpp"
 
-#include <string>
-
 namespace corefungi {
   namespace cfg = ::corefungi;
 
-  typedef std::function< void (std::string const& step, cfg::node_ref& r, cfg::ref_list& refs) > mutator;
+  typedef std::function< void (cfg::node& node, std::string const& step) > mutator;
 
   cfg::ref_list mutate(cfg::node& node, std::string const& path, cfg::mutator const mutation);
 
