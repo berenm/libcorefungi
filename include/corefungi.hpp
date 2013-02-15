@@ -33,10 +33,10 @@ namespace corefungi {
   cfg::ref_list   values(cfg::node& node);
   cfg::ref_dict   items(cfg::node& node);
 
-  extern cfg::node_ref system_sprout;
-  extern cfg::node_ref global_sprout;
-  extern cfg::node_ref local_sprout;
-  extern cfg::node_ref command_sprout;
+  extern cfg::node_ref system;
+  extern cfg::node_ref global;
+  extern cfg::node_ref local;
+  extern cfg::node_ref command;
 
 }
 

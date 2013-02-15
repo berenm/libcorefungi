@@ -23,10 +23,10 @@ int main(int argc, char const* argv[]) {
   }
 
   cfg::init(program, arguments);
-  std::clog << "command: " << cfg::command_sprout << std::endl;
-  std::clog << "local: " << cfg::local_sprout << std::endl;
-  std::clog << "global: " << cfg::global_sprout << std::endl;
-  std::clog << "system: " << cfg::system_sprout << std::endl;
+  std::clog << "command: " << cfg::command << std::endl;
+  std::clog << "local: " << cfg::local << std::endl;
+  std::clog << "global: " << cfg::global << std::endl;
+  std::clog << "system: " << cfg::system << std::endl;
 
   // *INDENT-OFF*/
   n = cfg::dict {

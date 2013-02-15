@@ -38,7 +38,7 @@ namespace corefungi {
   cfg::ref_list collect(std::string const& path) {
     cfg::ref_list refs;
 
-    for (auto& n : cfg::ref_list { cfg::command_sprout, cfg::local_sprout, cfg::global_sprout, cfg::system_sprout }) {
+    for (auto& n : cfg::ref_list { cfg::command, cfg::local, cfg::global, cfg::system }) {
       try {
         auto const collection = cfg::collect(n, path);
         std::copy(collection.begin(), collection.end(), std::back_inserter(refs));
