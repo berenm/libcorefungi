@@ -6,48 +6,31 @@
  */
 
 #include "corefungi/sprout.hpp"
+#include "corefungi/option.hpp"
 
 namespace corefungi {
 
-  std::vector< std::function< bpo::options_description(bool const) > > sprout_options;
+  void sprouts::add(cfg::mold&& m) {
+    sprouts::get_instance().builders.emplace_back(
+      [ = ]() {
+        bpo::options_description option_group(m.first);
 
-  sprout::sprout(std::string const& name) :
-    name(name) {
-    sprout_options.emplace_back(
-      [this](bool const shorten) {
-        bpo::options_description option_group(this->name + " options");
+        for (auto const& option: m.second) {
+          std::string name = option.long_name;
+          if (option.short_name != "")
+            name += "," + option.short_name;
 
-        for (auto const& option: this->options) {
-          std::string name = option.name;
-          std::replace(name.begin(), name.end(), '.', '-');
-
-          if (shorten)
-            option_group.add_options() ((name + "," + option.shortcut).c_str(), option, option.description.c_str());
-          else
-            option_group.add_options() ((this->name + "-" + name).c_str(), option, option.description.c_str());
+          option_group.add_options() (name.c_str(), new cfg::option(option), option.option_description.c_str());
         }
 
         return option_group;
       });
   }
 
-  /*
-   *    option(cfg::node& node, std::string const& name, std::string const& shortcut, std::string const& description);
-   *    operator bpo::typed_value< T >*();
-   *
-   * template< typename T >
-   * struct option {
-   *  option(cfg::node& node, std::string const& key);
-   *
-   *  void operator()(T const& value);
-   *  void operator()(std::vector< T > const& values);
-   *
-   *  operator bpo::typed_value< T >*();
-   *  bpo::typed_value< T >* operator->();
-   *
-   *  std::string const name;
-   *  std::string const description;
-   *  std::string const shortcut;
-   * };*/
+  void sprouts::build(bpo::options_description& global) {
+    for (auto const& build_option : sprouts::get_instance().builders) {
+      global.add(build_option());
+    }
+  }
 
 }

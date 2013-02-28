@@ -15,6 +15,7 @@
 
 #include "corefungi/prefix.hpp"
 #include "corefungi/yaml_parser.hpp"
+#include "corefungi/sprout.hpp"
 
 #include <iostream>
 
@@ -24,34 +25,6 @@ namespace corefungi {
   namespace {
     namespace bpo = boost::program_options;
     namespace bfs = boost::filesystem;
-
-    template< typename T >
-    struct spore_maker {
-      spore_maker(cfg::node& node, std::string const& key) :
-        node(node),
-        key(key)
-      {}
-
-      void operator()(T const& value) { cfg::put(this->node, this->key, value); }
-
-      void operator()(std::vector< T > const& values) {
-        cfg::grow(this->node, this->key + ".#" + std::to_string(values.size() - 1));
-        auto nodes = cfg::collect(this->node, this->key + ".#");
-
-        std::copy(values.begin(), values.end(), nodes.begin());
-      }
-
-      operator bpo::typed_value< T >*() {
-        return bpo::value< T >()->notifier(*this);
-      }
-
-      bpo::typed_value< T >* operator->() {
-        return static_cast< bpo::typed_value< T >* >(*this);
-      }
-
-      cfg::node_ref     node;
-      std::string const key;
-    };
 
     static bfs::path expand(std::string const& path) {
       if (path.empty())
@@ -93,25 +66,32 @@ namespace corefungi {
 
     static bfs::path global_path = global_paths.find(BOOST_PLATFORM) == global_paths.end() ? default_dir : global_paths[BOOST_PLATFORM];
 
+    // *INDENT-OFF*/
+    static cfg::node root = cfg::dict {
+      { "system", cfg::node() },
+      { "global", cfg::node() },
+      { "local", cfg::node() },
+      { "command", cfg::node() }
+    };
+    // *INDENT-ON*/
+
+    static corefungi::sprout const o = {
+      "General options", {
+        { "program.help","produces this help message", cfg::long_name = "help", cfg::short_name = "h", cfg::bool_switch },
+        { "program.config","custom configuration file", cfg::long_name = "config", cfg::short_name = "c" }
+      }
+    };
+
   }
 
-  // *INDENT-OFF*/
-  static cfg::node root = cfg::dict {
-    { "system", cfg::node() },
-    { "global", cfg::node() },
-    { "local", cfg::node() },
-    { "command", cfg::node() }
-  };
- // *INDENT-ON*/
-
-  cfg::node_ref system = cfg::collect(cfg::root, "system")[0];
+  cfg::node_ref system  = cfg::collect(cfg::root, "system")[0];
   cfg::node_ref global  = cfg::collect(cfg::root, "global")[0];
   cfg::node_ref local   = cfg::collect(cfg::root, "local")[0];
   cfg::node_ref command = cfg::collect(cfg::root, "command")[0];
 
-  extern std::vector< std::function< bpo::options_description(bool const) > > sprout_options;
-
   void init(std::string const& program, cfg::arguments const& arguments) {
+    namespace bpo = boost::program_options;
+
     auto const program_path = bfs::canonical(bfs::path(program).remove_filename());
     auto const program_name = bfs::path(program).stem().string();
 
@@ -119,9 +99,10 @@ namespace corefungi {
     auto const system_config = system_path / program_name / config_name;
     auto const global_config = global_path / program_name / config_name;
 
-    cfg::spore_maker< std::string >(cfg::command, "program.location") (program_path.string());
-    cfg::spore_maker< std::string >(cfg::command, "program.name") (program_name);
-    cfg::spore_maker< std::string >(cfg::command, "program.arguments") (arguments);
+    cfg::put(cfg::command, "program.location", program_path.string());
+    cfg::put(cfg::command, "program.name", program_name);
+    cfg::grow(cfg::command, "program.arguments.#" + std::to_string(arguments.size() - 1));
+    std::copy(arguments.begin(), arguments.end(), cfg::collect(cfg::command, "program.arguments.#").begin());
 
     if (bfs::exists(system_config))
       yaml::read(system_config.string(), cfg::system);
@@ -129,24 +110,15 @@ namespace corefungi {
     if (bfs::exists(global_config))
       yaml::read(global_config.string(), cfg::global);
 
-    bpo::options_description generic_options("Generic options");
-    generic_options.add_options()
-      ("help,h", "produce help message")
-      ("config,c", spore_maker< std::string >(cfg::command, "config.file"), "custom configuration file");
-
     bpo::options_description command_line_options;
-    command_line_options.add(generic_options);
-
-    for (auto const& sprout_option : sprout_options) {
-      command_line_options.add(sprout_option(&sprout_option == &sprout_options.front()));
-    }
+    cfg::sprouts::get_instance().build(command_line_options);
 
     bpo::variables_map vm;
     auto const&        options = bpo::command_line_parser(arguments).options(command_line_options).allow_unregistered().run();
     bpo::store(options, vm);
     bpo::notify(vm);
 
-    std::string const local_config = cfg::get("config.file", (program_path / config_name).string());
+    std::string const local_config = cfg::get("program.config", (program_path / config_name).string());
     if (bfs::exists(local_config))
       yaml::read(local_config, cfg::local);
 

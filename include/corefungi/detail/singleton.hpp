@@ -22,15 +22,18 @@ namespace corefungi {
     struct singleton {
       private:
         static T& instance;
+
+      public:
         static T& get_instance() {
           static detail::singleton_wrapper< T > t;
 
-          assert(!detail::singleton_wrapper< T >::m_is_destroyed);
+          assert(!detail::singleton_wrapper< T >::is_destroyed);
           singleton::use(instance);
 
           return static_cast< T& >(t);
         }
 
+      private:
         static void use(T const&) {}
     };
     template< class T > T& singleton< T >::instance = singleton< T >::get_instance();

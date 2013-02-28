@@ -6,27 +6,30 @@
  */
 
 #include "corefungi.hpp"
+#include "corefungi/sprout.hpp"
 #include "ostream.hpp"
 
 #include <iostream>
+
+corefungi::sprout const options = {
+  "Corefungi options", {
+    { "another.test",  "alternate config file", corefungi::bool_switch },
+    { "test.size_t",   "a size_t parameter", corefungi::of_type< size_t >() }
+  }
+};
 
 int main(int argc, char const* argv[]) {
   namespace cfg = ::corefungi;
 
   cfg::node n;
 
-  std::string                program = argv[0];
-  std::vector< std::string > arguments;
-
-  for (size_t i = 1; i < argc; ++i) {
-    arguments.push_back(argv[i]);
-  }
-
-  cfg::init(program, arguments);
+  cfg::init(argc, argv);
   std::clog << "command: " << cfg::command << std::endl;
   std::clog << "local: " << cfg::local << std::endl;
   std::clog << "global: " << cfg::global << std::endl;
   std::clog << "system: " << cfg::system << std::endl;
+
+  bool result = cfg::get("another.test");
 
   // *INDENT-OFF*/
   n = cfg::dict {

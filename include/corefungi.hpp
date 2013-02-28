@@ -18,6 +18,17 @@ namespace corefungi {
   typedef std::vector< std::string > arguments;
   void init(std::string const& program, cfg::arguments const& arguments);
 
+  static void init(int const argc, char const* const argv[]) {
+    std::string const          program = argv[0];
+    std::vector< std::string > arguments;
+
+    for (size_t i = 1; i < argc; ++i) {
+      arguments.push_back(argv[i]);
+    }
+
+    cfg::init(program, arguments);
+  }
+
   cfg::ref_list collect(std::string const& path);
   cfg::spore    get(std::string const& path);
   cfg::spore    get(std::string const& path, cfg::spore const& default_value);

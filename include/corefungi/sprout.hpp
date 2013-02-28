@@ -13,34 +13,27 @@
 
 #include <boost/program_options.hpp>
 
-#include "corefungi/node_ref.hpp"
+#include "corefungi/node.hpp"
+#include "corefungi/option.hpp"
+#include "corefungi/detail/singleton.hpp"
 
 namespace corefungi {
   namespace cfg = ::corefungi;
   namespace bpo = ::boost::program_options;
 
-  struct sprout : cfg::node_ref {
-    sprout(std::string const& name);
+  typedef std::pair< std::string, cfg::options > mold;
 
-    struct option {
-      option(cfg::node& node, std::string const& name, std::string const& description) : option(node, name, "", description) {}
-      option(cfg::node& node, std::string const& name, std::string const& shortcut, std::string const& description);
+  struct sprouts : cfg::detail::singleton< cfg::sprouts > {
+    std::vector< std::function< bpo::options_description() > > builders;
 
-      operator bpo::value_semantic const* () const { return bpo::value< std::string >(); }
+    static void add(cfg::mold&& m);
+    static void build(bpo::options_description& global);
+  };
 
-      // name(name),
-      // description(description),
-      // shortcut(shortcut)
-      // {
-      // bpo::value< T >::operator->notifier(*this);
-      // }
-
-      std::string const name;
-      std::string const description;
-      std::string const shortcut;
-    };
-    std::string const           name;
-    std::vector< option > const options;
+  struct sprout : cfg::detail::singleton< cfg::sprout > {
+    sprout() = default;
+    sprout(std::string const& s, cfg::options const& o) { sprout::get_instance() = cfg::mold { s, o }; }
+    void operator=(cfg::mold&& m) const { sprouts::add(std::forward< cfg::mold >(m)); }
   };
 
 }
