@@ -11,6 +11,7 @@
 #include "corefungi/node.hpp"
 #include "corefungi/node_ref.hpp"
 #include "corefungi/spore.hpp"
+#include "corefungi/sprout.hpp"
 
 namespace corefungi {
   namespace cfg = ::corefungi;

@@ -6,7 +6,6 @@
  */
 
 #include "corefungi.hpp"
-#include "corefungi/sprout.hpp"
 #include "ostream.hpp"
 
 #include <iostream>
