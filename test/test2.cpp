@@ -7,6 +7,8 @@
 
 // 1. include the corefungi.hpp header.
 #include "corefungi.hpp"
+#include "ostream.hpp"
+#include <iostream>
 
 // 2. spread some sprouts in your libraries and executables.
 namespace cfg = ::corefungi;
