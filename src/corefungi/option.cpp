@@ -59,28 +59,24 @@ namespace corefungi {
   }
 
   void option::xparse(boost::any& value_store, std::vector< std::string > const& new_tokens) const {
-    if (new_tokens.empty() && std::get< 0 >(this->implicit_value)) {
-      if (!this->multitoken) {
-        value_store = std::get< 1 >(this->implicit_value);
-      } else {
-        value_store = cfg::spore_list {
-          std::get< 1 >(this->implicit_value)
-        };
-      }
-
-      return;
-    }
-
     if (!this->multitoken) {
-      value_store = this->validate(new_tokens[0]);
+      if (!new_tokens.empty())
+        value_store = this->validate(new_tokens[0]);
+      else if (std::get< 0 >(this->implicit_value))
+        value_store = std::get< 1 >(this->implicit_value);
+
     } else {
-      auto l = cfg::spore_list {};
+      if (value_store.empty())
+        value_store = boost::any(cfg::spore_list {});
 
-      for (auto const& s : new_tokens) {
-        l.emplace_back(this->validate(s));
+      cfg::spore_list& list = *boost::any_cast< cfg::spore_list >(&value_store);
+
+      if (new_tokens.empty() && std::get< 0 >(this->implicit_value))
+        list.emplace_back(std::get< 1 >(this->implicit_value));
+
+      for (auto const& token : new_tokens) {
+        list.emplace_back(this->validate(token));
       }
-
-      value_store = l;
     }
   }
 
