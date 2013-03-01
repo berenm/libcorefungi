@@ -122,8 +122,10 @@ namespace corefungi {
     if (bfs::exists(local_config))
       yaml::read(local_config, cfg::local);
 
-    if (vm.count("help"))
+    if (static_cast< bool >(cfg::get("program.help"))) {
       std::cout << command_line_options << std::endl;
+      std::exit(0);
+    }
   } // init
 
 }

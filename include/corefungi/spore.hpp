@@ -33,18 +33,14 @@ namespace corefungi {
     spore(spore const&) = default;
 
     template< typename T >
-    spore(T const& t) :           std::string(boost::lexical_cast< std::string >(t)) {}
-    spore(bool const b) :         std::string(b ? "true" : "false") {}
+    spore(T const& t) : std::string(boost::lexical_cast< std::string >(t)) {}
+    explicit spore(bool const b) : std::string(b ? "true" : "false") {}
     spore(char const* s) :        std::string(s) {}
     spore(std::string const& s) : std::string(s) {}
 
     template< typename T, typename cfg::if_spore_convertible< T >::type = true >
     operator T() const { return boost::lexical_cast< T >(static_cast< std::string >(*this)); }
-    operator bool() const {
-      return *this == "true" ? true :
-             *this == "false" ? false :
-             boost::lexical_cast< bool >(static_cast< std::string >(*this));
-    }
+    explicit operator bool() const { return *this == "true" ? true : *this == "false" ? false : boost::lexical_cast< bool >(static_cast< std::string >(*this)); }
   };
 
   template< typename Cr, typename Tr >

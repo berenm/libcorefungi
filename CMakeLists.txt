@@ -59,4 +59,8 @@ if(BUILD_TESTS)
   add_executable(unit-test-corefungi test/test1.cpp)
   target_link_libraries(unit-test-corefungi corefungi)
   add_test(unit-test-corefungi unit-test-corefungi)
+
+  add_executable(unit-test-corefungi-2 test/test2.cpp)
+  target_link_libraries(unit-test-corefungi-2 corefungi)
+  add_test(unit-test-corefungi-2 unit-test-corefungi)
 endif()
