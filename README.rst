@@ -1,4 +1,3 @@
-===============================================
 Core Fungi: C++11 simple configuration library.
 ===============================================
 .. image:: https://secure.travis-ci.org/berenm/libcorefungi.png?branch=master
@@ -67,9 +66,24 @@ And at run-time:
   my.integer.default is: 5
   my.integers are: [3, 4, 5, 2]
 
+
+STATIC INITIALIZATION CAVEAT
+````````````````````````````
+The automatic option registration, through the cfg::sprout type, relies on static
+initialisation mechanism. However, the C++ standard allows a linker to drop the code
+of any compiled translation unit if it can prove that no code from it is used anywhere
+in the compiled program, dropping any statically initialized variable as well.
+
+Currently, no workaround is implemented, if ever possible, and the sprout might not grow
+as expected if they are spread in isolated translation units. The best practice is to
+spread the sprouts around some core functionality of your program or libraries, to be
+sure they will grow if ever the functionality is used.
+
+Or one can even see that as a feature to disable sprouts from unused libraries...
+
+
 COPYING INFORMATION
 ````````````````````````````
-
  Distributed under the Boost Software License, Version 1.0.
 
  See accompanying file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt
