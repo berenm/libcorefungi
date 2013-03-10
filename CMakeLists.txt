@@ -29,6 +29,11 @@ file(MAKE_DIRECTORY corefungi)
 configure_file(src/corefungi/prefix.hpp.in corefungi/prefix.hpp)
 
 file(GLOB_RECURSE libcorefungi_SOURCES src/*.cpp)
+
+if(APPLE)
+    set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
+endif(APPLE)
+
 add_library(corefungi
   ${libcorefungi_SOURCES}
   corefungi/prefix.hpp
