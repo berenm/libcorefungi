@@ -10,38 +10,23 @@
 
 #include <cstdint>
 #include <ostream>
+#include <vector>
+#include <list>
+#include <forward_list>
+#include <queue>
+#include <stack>
+#include <valarray>
+#include <array>
+#include <bitset>
+#include <set>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+#include <tuple>
+#include <complex>
+#include <functional>
 
 namespace std {
-
-  template< class T, class Allocator > class deque;
-  template< class T, class Allocator > class list;
-  template< class T, class Allocator > class forward_list;
-  template< class T, class Allocator > class vector;
-
-  template< class T, class Container > class stack;
-  template< class T, class Container > class queue;
-  template< class T, class Container, class Compare > class priority_queue;
-
-  template< class T, std::size_t N > struct array;
-  template< std::size_t N > class bitset;
-
-  template< class T > class valarray;
-
-  template< class Key, class Compare, class Allocator > class set;
-  template< class Key, class Compare, class Allocator > class multiset;
-  template< class Key, class T, class Compare, class Allocator > class map;
-  template< class Key, class T, class Compare, class Allocator > class multimap;
-
-  template< class Key, class Hash, class KeyEqual, class Allocator > class unordered_set;
-  template< class Key, class Hash, class KeyEqual, class Allocator > class unordered_multiset;
-  template< class Key, class T, class Hash, class KeyEqual, class Allocator > class unordered_map;
-  template< class Key, class T, class Hash, class KeyEqual, class Allocator > class unordered_multimap;
-
-  template< class ... Types > class tuple;
-  template< class T1, class T2 > struct pair;
-  template< class T > class complex;
-
-  template< class F > class function;
 
   namespace detail {
 

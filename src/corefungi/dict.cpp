@@ -19,7 +19,7 @@ namespace corefungi {
       std::vector< OutT > o;
       std::for_each(i.begin(), i.end(),
                     [&](typename InT::value_type& v) {
-                      o.emplace_back(op(v));
+                      o.push_back(op(v));
                     });
 
       return o;
@@ -30,7 +30,7 @@ namespace corefungi {
       std::unordered_map< typename std::remove_cv< OutK >::type, OutV > o;
       std::for_each(i.begin(), i.end(),
                     [&](typename InT::value_type& v) {
-                      o.emplace(op(v));
+                      o.insert(op(v));
                     });
 
       return o;

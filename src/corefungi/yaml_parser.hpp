@@ -22,7 +22,7 @@ namespace corefungi {
       if (node.Type() == YAML::NodeType::Map) {
         cfg::dict v;
         for (YAML::const_iterator it = node.begin(), end = node.end(); it != end; ++it) {
-          v.emplace(cfg::pair { it->first.as< std::string >(), read_helper(it->second) });
+          v.emplace(it->first.as< std::string >(), read_helper(it->second));
         }
 
         return v;
