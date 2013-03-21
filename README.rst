@@ -4,6 +4,10 @@ Core Fungi: C++11 simple configuration library.
     :alt: Build Status
     :target: https://travis-ci.org/berenm/libcorefungi
 
+.. image:: https://coveralls.io/repos/berenm/libcorefungi/badge.png?branch=master
+    :alt: Coverage Status
+    :target: https://coveralls.io/r/berenm/libcorefungi
+
 .. image:: http://stillmaintained.com/berenm/libcorefungi.png
     :alt: Still Maintained?
     :target: http://stillmaintained.com/berenm/libcorefungi
