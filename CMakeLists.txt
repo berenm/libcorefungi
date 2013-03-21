@@ -65,3 +65,8 @@ if(BUILD_TESTS)
   target_link_libraries(unit-test-corefungi-2 corefungi)
   add_test(unit-test-corefungi-2 unit-test-corefungi)
 endif()
+
+if(ENABLE_GCOVERALLS)
+  include(GCoveralls)
+  enable_gcoveralls()
+endif()
