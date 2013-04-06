@@ -25,15 +25,9 @@ add_submodule(yaml-cpp git://github.com/bminor/yaml-cpp.git lib/yaml-cpp TAG rel
 # libcorefungi
 include_directories(include src ${CMAKE_CURRENT_BINARY_DIR})
 
-file(MAKE_DIRECTORY corefungi)
-configure_file(src/corefungi/prefix.hpp.in corefungi/prefix.hpp)
-
 file(GLOB_RECURSE libcorefungi_SOURCES src/*.cpp)
 
-add_library(corefungi
-  ${libcorefungi_SOURCES}
-  corefungi/prefix.hpp
-)
+add_library(corefungi ${libcorefungi_SOURCES})
 set_target_properties(corefungi PROPERTIES
   VERSION   ${libcorefungi_VERSION}
   SOVERSION ${libcorefungi_SOVERSION}

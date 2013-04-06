@@ -13,9 +13,9 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 
-#include "corefungi/prefix.hpp"
 #include "corefungi/yaml_parser.hpp"
 #include "corefungi/sprout.hpp"
+#include "corefungi/paths.hpp"
 
 #include <iostream>
 
@@ -26,46 +26,6 @@ namespace corefungi {
     namespace bpo = boost::program_options;
     namespace bfs = boost::filesystem;
 
-    static bfs::path expand(std::string const& path) {
-      if (path.empty())
-        return bfs::path();
-
-      if (path[0] != '~')
-        return bfs::path(path);
-
-      std::string modified = path;
-      if ((path.size() > 1) &&
-          (path[1] != '/'))
-        modified.insert(1, "/../");
-
-      char const* const home        = std::getenv("HOME");
-      char const* const userprofile = std::getenv("USERPROFILE");
-      char const* const homedrive   = std::getenv("HOMEDRIVE");
-      char const* const homepath    = std::getenv("HOMEPATH");
-
-      if (home)
-        modified.replace(0, 1, std::string(home));
-
-      else if (userprofile)
-        modified.replace(0, 1, std::string(userprofile));
-
-      else if (homedrive && homepath)
-        modified.replace(0, 1, std::string(homedrive) + std::string(homepath));
-
-      return cfg::expand(modified);
-    }
-
-    static bfs::path default_dir = cfg::expand("~") / ".config";
-    static bfs::path system_path = bfs::path(cfg::install_prefix == "/usr" ? "/" : cfg::install_prefix) / "etc";
-
-    static std::unordered_map< std::string, bfs::path > global_paths = {
-      { "linux",  std::getenv("XDG_CONFIG") ? bfs::path(std::getenv("XDG_CONFIG")) : default_dir },
-      { "Win32",  std::getenv("APPDATA") ? bfs::path(std::getenv("APPDATA")) : default_dir       },
-      { "Mac OS", cfg::expand("~") / "Library" / "Preferences"                                   }
-    };
-
-    static bfs::path global_path = global_paths.find(BOOST_PLATFORM) == global_paths.end() ? default_dir : global_paths[BOOST_PLATFORM];
-
     // *INDENT-OFF*/
     static cfg::node root = cfg::dict {
       { "system", cfg::node() },
@@ -73,7 +33,7 @@ namespace corefungi {
       { "local", cfg::node() },
       { "command", cfg::node() }
     };
-    // *INDENT-ON*/
+ // *INDENT-ON*/
 
     static corefungi::sprout const o = {
       "General options", {
@@ -92,17 +52,25 @@ namespace corefungi {
   void init(std::string const& program, cfg::arguments const& arguments) {
     namespace bpo = boost::program_options;
 
-    auto const program_path = bfs::canonical(bfs::path(program).remove_filename());
+    auto const program_path = bfs::canonical(bfs::path(program).parent_path());
     auto const program_name = bfs::path(program).stem().string();
-
-    auto const config_name   = program_name + ".conf";
-    auto const system_config = system_path / program_name / config_name;
-    auto const global_config = global_path / program_name / config_name;
 
     cfg::put(cfg::command, "program.location", program_path.string());
     cfg::put(cfg::command, "program.name", program_name);
     cfg::grow(cfg::command, "program.arguments.#" + std::to_string(arguments.size() - 1));
     std::copy(arguments.begin(), arguments.end(), cfg::collect(cfg::command, "program.arguments.#").begin());
+
+    cfg::put(cfg::command, "program.configdir.system", cfg::system_config_dir(program));
+    cfg::put(cfg::command, "program.cachedir.system", cfg::system_cache_dir(program));
+    cfg::put(cfg::command, "program.datadir.system", cfg::system_data_dir(program));
+
+    cfg::put(cfg::command, "program.configdir.global", cfg::global_config_dir(program));
+    cfg::put(cfg::command, "program.cachedir.global", cfg::global_cache_dir(program));
+    cfg::put(cfg::command, "program.datadir.global", cfg::global_data_dir(program));
+
+    auto const config_name   = program_name + ".conf";
+    auto const system_config = bfs::path(cfg::get("program.system.configdir")) / program_name / config_name;
+    auto const global_config = bfs::path(cfg::get("program.global.configdir")) / program_name / config_name;
 
     if (bfs::exists(system_config))
       yaml::read(system_config.string(), cfg::system);
