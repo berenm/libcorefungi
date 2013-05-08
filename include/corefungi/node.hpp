@@ -19,14 +19,14 @@
 namespace corefungi {
   namespace cfg = ::corefungi;
 
-  typedef boost::make_recursive_variant< cfg::spore,
-                                         std::vector< boost::recursive_variant_ >,
-                                         std::unordered_map< cfg::spore, boost::recursive_variant_ >
-                                         >::type node;
-  typedef boost::mpl::at_c< node::types, 0 >::type value;
-  typedef boost::mpl::at_c< node::types, 1 >::type list;
-  typedef boost::mpl::at_c< node::types, 2 >::type dict;
-  typedef cfg::dict::value_type                    pair;
+  typedef typename boost::make_recursive_variant< cfg::spore,
+                                                  std::vector< boost::recursive_variant_ >,
+                                                  std::unordered_map< cfg::spore, boost::recursive_variant_ >
+                                                  >::type node;
+  typedef typename boost::mpl::at_c< node::types, 0 >::type value;
+  typedef typename boost::mpl::at_c< node::types, 1 >::type list;
+  typedef typename boost::mpl::at_c< node::types, 2 >::type dict;
+  typedef typename cfg::dict::value_type                    pair;
 
   /** forbid conversion from spore to node, as a node is already constructible from a spore */
   template< > struct is_spore_convertible< cfg::node > : std::false_type {};

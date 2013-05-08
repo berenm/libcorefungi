@@ -31,6 +31,7 @@ namespace corefungi {
                                                                                       )
     {}
     option(std::string const name, std::string const description, cfg::option::manipulators const& manipulators);
+    virtual ~option() {}
 
     std::string name() const;
     unsigned    min_tokens() const;
