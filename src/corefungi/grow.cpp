@@ -54,7 +54,7 @@ namespace corefungi {
     auto refs = cfg::grow(node, path);
 
     for (auto& r : refs) {
-      r = cfg::value(value);
+      *r = cfg::value(value);
     }
   }
 

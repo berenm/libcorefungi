@@ -20,7 +20,7 @@ namespace corefungi {
           if (option.short_name != "")
             name += "," + option.short_name;
 
-          option_group.add_options() (name.c_str(), new cfg::option(option), option.option_description.c_str());
+          option_group.add_options() (name.c_str(), new cfg::option(option), option.description.c_str());
         }
 
         return option_group;

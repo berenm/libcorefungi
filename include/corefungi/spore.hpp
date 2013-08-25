@@ -10,15 +10,14 @@
 
 #include <string>
 #include <vector>
-#include <ostream>
+#include <iosfwd>
 
-#include <boost/lexical_cast.hpp>
+#include "corefungi/detail/lexical_cast.hpp"
 
 namespace corefungi {
   namespace cfg = ::corefungi;
 
   template< typename T > struct is_spore_convertible : std::true_type {};
-  template< typename T > using if_spore_convertible = boost::enable_if_c< cfg::is_spore_convertible< T >::value, bool >;
 
   /** no need to lexically convert from a spore to string, a spore is already a std::string */
   template< > struct is_spore_convertible< std::string > : std::false_type {};
@@ -32,15 +31,13 @@ namespace corefungi {
     spore()             = default;
     spore(spore const&) = default;
 
-    template< typename T >
-    spore(T const& t) : std::string(boost::lexical_cast< std::string >(t)) {}
-    explicit spore(bool const b) : std::string(b ? "true" : "false") {}
     spore(char const* s) :        std::string(s) {}
     spore(std::string const& s) : std::string(s) {}
 
-    template< typename T, typename cfg::if_spore_convertible< T >::type = true >
-    operator T() const { return boost::lexical_cast< T >(static_cast< std::string >(*this)); }
-    explicit operator bool() const { return *this == "true" ? true : *this == "false" ? false : boost::lexical_cast< bool >(static_cast< std::string >(*this)); }
+    template< typename T > using if_sporable = typename std::enable_if< cfg::is_spore_convertible< T >::value, void >::type;
+
+    template< typename T, typename = if_sporable< T > > explicit spore(T const& t) : std::string(cfg::lexical_cast< std::string >(t)) {}
+    template< typename T, typename = if_sporable< T > > operator T() const { return cfg::lexical_cast< T, std::string >(*this); }
   };
 
   template< typename Cr, typename Tr >

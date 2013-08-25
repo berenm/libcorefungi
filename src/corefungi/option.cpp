@@ -10,24 +10,6 @@
 
 namespace corefungi {
 
-  option::option(std::string const name, std::string const description, cfg::option::manipulators const& manipulators) :
-    option_name(name),
-    option_description(description),
-    short_name(""),
-    long_name(name),
-    default_value(false, {}, ""),
-    implicit_value(false, {}, ""),
-    composing(false),
-    required(false),
-    multitoken(false),
-    validate(option::no_validation) {
-    std::replace(this->long_name.begin(), this->long_name.end(), '.', '-');
-
-    for (auto const& manipulate : manipulators) {
-      manipulate(*this);
-    }
-  }
-
   std::string option::name() const {
     if (std::get< 0 >(this->implicit_value) && (std::get< 2 >(this->implicit_value) != "")) {
       std::string msg = "[=arg(=" + std::get< 2 >(this->implicit_value) + ")]";
@@ -104,10 +86,6 @@ namespace corefungi {
       auto nodes = cfg::collect(cfg::command, this->option_name + ".#");
       std::copy(values.begin(), values.end(), nodes.begin());
     }
-  }
-
-  cfg::spore option::no_validation(std::string const& s) {
-    return s;
   }
 
 }

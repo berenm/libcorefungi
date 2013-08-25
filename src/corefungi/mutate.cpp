@@ -42,7 +42,7 @@ namespace corefungi {
   }
 
   cfg::ref_list mutate(cfg::node& node, std::string const& path, cfg::mutator const mutation) {
-    cfg::ref_list  refs = { node };
+    cfg::ref_list  refs = { cfg::node_ref { node } };
     cfg::step_list steps;
     boost::split(steps, path, boost::is_any_of("."), boost::token_compress_on);
 

@@ -29,6 +29,16 @@ namespace corefungi {
   typedef std::unordered_map< cfg::spore, cfg::node_cref > cref_dict;
   typedef cfg::cref_dict::value_type                       cref_pair;
 
+  template< > struct is_spore_convertible< cfg::node_ref > : std::false_type {};
+  template< > struct is_spore_convertible< cfg::ref_list > : std::false_type {};
+  template< > struct is_spore_convertible< cfg::ref_dict > : std::false_type {};
+  template< > struct is_spore_convertible< cfg::ref_pair > : std::false_type {};
+
+  template< > struct is_spore_convertible< cfg::node_cref > : std::false_type {};
+  template< > struct is_spore_convertible< cfg::cref_list > : std::false_type {};
+  template< > struct is_spore_convertible< cfg::cref_dict > : std::false_type {};
+  template< > struct is_spore_convertible< cfg::cref_pair > : std::false_type {};
+
 }
 
 namespace boost {

@@ -30,6 +30,8 @@ namespace corefungi {
 
   /** forbid conversion from spore to node, as a node is already constructible from a spore */
   template< > struct is_spore_convertible< cfg::node > : std::false_type {};
+  template< > struct is_spore_convertible< cfg::list > : std::false_type {};
+  template< > struct is_spore_convertible< cfg::dict > : std::false_type {};
 
   template< typename T > static inline bool is_a(cfg::node const& n) { return n.type() == typeid(T); }
 

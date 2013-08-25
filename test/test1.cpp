@@ -73,17 +73,17 @@ int main(int argc, char const* argv[]) {
 
   std::cout << n << std::endl;
 
-  try {
-    cfg::spore sp = cfg::list {
-      "bar", "bar"
-    };
-    std::cout << sp << std::endl;
-    size_t v = sp;
+  // try {
+  //   cfg::spore sp = cfg::list {
+  //     "bar", "bar"
+  //   };
+  //   std::cout << sp << std::endl;
+  //   size_t v = sp;
 
-    std::cout << sp << ": " << v << std::endl;
-  } catch (std::exception const& e) {
-    std::clog << "Exception raised: " << e.what() << std::endl;
-  }
+  //   std::cout << sp << ": " << v << std::endl;
+  // } catch (std::exception const& e) {
+  //   std::clog << "Exception raised: " << e.what() << std::endl;
+  // }
 
   try {
     cfg::spore sp = "0";
