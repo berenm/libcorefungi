@@ -28,10 +28,10 @@ namespace corefungi {
 
     // *INDENT-OFF*/
     static cfg::node root = cfg::dict {
-      { "system", cfg::node() },
-      { "global", cfg::node() },
-      { "local", cfg::node() },
-      { "command", cfg::node() }
+      { cfg::spore {"system"}, cfg::node {} },
+      { cfg::spore {"global"}, cfg::node {} },
+      { cfg::spore {"local"}, cfg::node {} },
+      { cfg::spore {"command"}, cfg::node {} }
     };
  // *INDENT-ON*/
 
@@ -58,7 +58,9 @@ namespace corefungi {
     cfg::put(cfg::command, "program.location", program_path.string());
     cfg::put(cfg::command, "program.name", program_name);
     cfg::grow(cfg::command, "program.arguments.#" + std::to_string(arguments.size() - 1));
-    std::copy(arguments.begin(), arguments.end(), cfg::collect(cfg::command, "program.arguments.#").begin());
+    std::transform(arguments.begin(), arguments.end(),
+      cfg::collect(cfg::command, "program.arguments.#").begin(),
+      [](std::string const& s) { return cfg::spore {s}; });
 
     cfg::put(cfg::command, "program.configdir.system", cfg::system_config_dir(program));
     cfg::put(cfg::command, "program.cachedir.system", cfg::system_cache_dir(program));

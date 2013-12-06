@@ -33,8 +33,9 @@ namespace corefungi {
         return;
 
       auto& d = boost::get< cfg::dict >(node);
-      if (d.find(step) == d.end())
-        d.emplace(step, cfg::node {});
+      auto const spore = cfg::spore {step};
+      if (d.find(spore) == d.end())
+        d.emplace(std::move(spore), cfg::node {});
     }
 
   }

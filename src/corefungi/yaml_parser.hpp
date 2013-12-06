@@ -22,7 +22,7 @@ namespace corefungi {
       if (node.Type() == YAML::NodeType::Map) {
         cfg::dict v;
         for (YAML::const_iterator it = node.begin(), end = node.end(); it != end; ++it) {
-          v.emplace(it->first.as< std::string >(), read_helper(it->second));
+          v.emplace(cfg::spore {it->first.as< std::string >()}, read_helper(it->second));
         }
 
         return v;
@@ -38,7 +38,7 @@ namespace corefungi {
       }
 
       if (node.Type() == YAML::NodeType::Scalar)
-        return node.as< std::string >();
+        return cfg::spore {node.as< std::string >()};
 
       return cfg::node {};
     } // read_helper

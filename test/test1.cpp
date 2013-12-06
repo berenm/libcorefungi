@@ -32,12 +32,12 @@ int main(int argc, char const* argv[]) {
 
   // *INDENT-OFF*/
   n = cfg::dict {
-    { "value", cfg::value { "bla" } },
-    { "list-value", cfg::list { "bar", "bar" } },
-    { "dict-value", cfg::dict { { "bar", "bar" } } },
-    { "dict-value-2",
+    { cfg::spore {"value"}, cfg::value { "bla" } },
+    { cfg::spore {"list-value"}, cfg::list { cfg::value {"bar"}, cfg::value {"bar"} } },
+    { cfg::spore {"dict-value"}, cfg::dict { { cfg::spore {"bar"}, cfg::value {"bar"} } } },
+    { cfg::spore {"dict-value-2"},
       cfg::dict {
-        { "bar", cfg::list { "bar0", "bar1" } }
+        { cfg::spore {"bar"}, cfg::list { cfg::value {"bar0"}, cfg::value {"bar1"} } }
       }
     }
   };
@@ -51,7 +51,7 @@ int main(int argc, char const* argv[]) {
   auto sprinklings = cfg::grow(m, "foo.#.bla");
   std::cout << sprinklings << std::endl;
   for (auto& n : sprinklings) {
-    n = "bla";
+    n = cfg::spore {"bla"};
   }
 
   std::cout << m << std::endl;
@@ -86,8 +86,8 @@ int main(int argc, char const* argv[]) {
   // }
 
   try {
-    cfg::spore sp = "0";
-    size_t     v  = sp;
+    auto const   sp = cfg::spore {"0"};
+    size_t const v  = sp;
 
     std::cout << sp << ": " << v << std::endl;
   } catch (std::exception const& e) {

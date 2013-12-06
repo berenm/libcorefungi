@@ -17,10 +17,15 @@
 namespace corefungi {
   namespace cfg = ::corefungi;
 
+  struct spore;
+
   template< typename T > struct is_spore_convertible : std::true_type {};
 
   /** no need to lexically convert from a spore to string, a spore is already a std::string */
   template< > struct is_spore_convertible< std::string > : std::false_type {};
+
+  /** no need to convert a spore from another spore, copy constructors are there */
+  template< > struct is_spore_convertible< cfg::spore > : std::false_type {};
 
   /**
    * @brief opt-out string convertible structure.
@@ -31,8 +36,7 @@ namespace corefungi {
     spore()             = default;
     spore(spore const&) = default;
 
-    spore(char const* s) :        std::string(s) {}
-    spore(std::string const& s) : std::string(s) {}
+    explicit spore(std::string const& s) : std::string(s) {}
 
     template< typename T > using if_sporable = typename std::enable_if< cfg::is_spore_convertible< T >::value, void >::type;
 

@@ -28,8 +28,9 @@ namespace corefungi {
 
     static void collect(cfg::dict& dict, std::string const& step, cfg::ref_list& refs) {
       if (step != "*") {
-        if (dict.find(step) != dict.end())
-          refs.emplace_back(dict.at(step));
+        auto const spore = cfg::spore {step};
+        if (dict.find(spore) != dict.end())
+          refs.emplace_back(dict.at(std::move(spore)));
 
       } else {
         for (auto& pair : dict) {
