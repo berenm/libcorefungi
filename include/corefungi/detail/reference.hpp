@@ -20,11 +20,10 @@ namespace corefungi {
     struct reference {
       public:
         /** default constructors and assignment operators for reference */
+        reference()                              = default;
         reference(reference const& o)            = default;
-        reference(reference& o)                  = default;
         reference(reference&& o)                 = default;
         reference& operator=(reference const& o) = default;
-        reference& operator=(reference& o)       = default;
         reference& operator=(reference&& o)      = default;
 
         template< typename U > using if_derive_T = typename std::enable_if< std::is_base_of< T, U >::value, void >::type;
