@@ -43,7 +43,7 @@ namespace corefungi {
       return cfg::node {};
     } // read_helper
 
-    void read_internal(std::istream& stream, cfg::node& n, std::string const& file_name) {
+    void read_internal(std::istream& stream, cfg::node& n, std::string const&) {
       n = read_helper(YAML::Load(stream));
     }
 
