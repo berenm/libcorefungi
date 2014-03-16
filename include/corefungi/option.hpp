@@ -72,14 +72,14 @@ namespace corefungi {
 
     virtual ~option() {}
 
-    std::string name() const;
-    unsigned    min_tokens() const;
-    unsigned    max_tokens() const;
-    bool        is_composing() const;
-    bool        is_required() const;
-    void        xparse(boost::any& value_store, std::vector< std::string > const& new_tokens) const;
-    bool        apply_default(boost::any& value_store) const;
-    void        notify(boost::any const& value_store) const;
+    std::string name() const override;
+    unsigned    min_tokens() const override;
+    unsigned    max_tokens() const override;
+    bool        is_composing() const override;
+    bool        is_required() const override;
+    void        xparse(boost::any& value_store, std::vector< std::string > const& new_tokens) const override;
+    bool        apply_default(boost::any& value_store) const override;
+    void        notify(boost::any const& value_store) const override;
   };
   typedef std::vector< cfg::option > options;
 
