@@ -18,7 +18,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 
-add_submodule(yaml-cpp git://github.com/bminor/yaml-cpp.git lib/yaml-cpp TAG release-0.5.1 INCLUDE_DIRS include)
+add_submodule(yaml-cpp git://github.com/berenm/yaml-cpp11.git lib/yaml-cpp BRANCH c++11 INCLUDE_DIRS include)
 
 
 # -------------------------------------------------------------------------
