@@ -48,6 +48,9 @@ namespace corefungi {
     boost::split(steps, path, boost::is_any_of("."), boost::token_compress_on);
 
     for (auto const& step : steps) {
+      if (step.empty())
+        continue;
+
       cfg::ref_list subrefs = {};
 
       for (auto& r : refs) {

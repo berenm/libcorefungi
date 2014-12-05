@@ -20,6 +20,14 @@ corefungi::sprout const options = {
 int main(int argc, char const* argv[]) {
   namespace cfg = ::corefungi;
 
+  {
+    cfg::node m;
+    cfg::put(m, "#.a", "1");
+    cfg::put(m, "#2.b", "1");
+
+    std::cout << m << std::endl;
+  }
+
   cfg::node n;
 
   cfg::init(argc, argv);
