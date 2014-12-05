@@ -4,126 +4,72 @@
 #include <string>
 #include <vector>
 
-#include <boost/program_options.hpp>
-
-#include "corefungi/manipulable.hpp"
 #include "corefungi/spore.hpp"
+#include "corefungi/manipulable.hpp"
 
 namespace corefungi {
 namespace cfg = ::corefungi;
-namespace bpo = ::boost::program_options;
 
-struct option_base {
-  using validator = std::function<cfg::spore(std::string const& s)>;
+struct option : cfg::manipulable<cfg::option> {
+  struct optional : std::tuple<bool, cfg::spore> {
+    using tuple = std::tuple<bool, cfg::spore>;
 
-  struct named_option : std::tuple<bool, cfg::spore, std::string> {
-    using tuple_type = std::tuple<bool, cfg::spore, std::string>;
+    optional(bool b, cfg::spore v) : tuple{b, std::move(v)} {}
 
-    template <typename T> named_option& operator=(T&& v) {
-      tuple_type::operator=(tuple_type{true, cfg::spore{v}, cfg::spore{v}});
-      return *this;
+    template <typename T> optional& operator=(T v) {
+      return tuple::operator=(tuple{true, cfg::spore{v}}), *this;
     }
-
-    template <typename T>
-    named_option& operator=(std::pair<T, std::string>&& v) {
-      tuple_type::operator=(tuple_type{true, cfg::spore{v.first}, v.second});
-      return *this;
-    }
-
-    named_option(bool const b, cfg::spore const v, std::string const s)
-        : tuple_type{b, v, s} {}
   };
 
-  option_base(std::string const name, std::string const description)
-      : option_name(name), description(description) {}
+  std::string name;
+  std::string description;
 
-  std::string const option_name;
-  std::string const description;
+  std::string shortname = "";
+  std::string longname  = name;
 
-  std::string short_name = "";
-  std::string long_name  = option_name;
+  optional default_  = {false, {}};
+  optional implicit  = {false, {}};
+  bool     composing = false;
+  bool     required  = false;
+  bool     multiple  = false;
 
-  named_option default_value  = {false, {}, ""};
-  named_option implicit_value = {false, {}, ""};
-  bool         composing      = false;
-  bool         required       = false;
-  bool         multitoken     = false;
-  validator    validate = [](std::string const& s) { return cfg::spore{s}; };
-};
+  bool has_default() const { return std::get<0>(this->default_); }
+  bool is_implicit() const { return std::get<0>(this->implicit); }
 
-struct option : cfg::option_base,
-                cfg::manipulable<cfg::option>,
-                bpo::value_semantic_codecvt_helper<char> {
+  option()              = default;
+  option(option const&) = default;
+  option(option&&)      = default;
+  option& operator=(option const&) = default;
+  option& operator=(option&&) = default;
+
   using manipulable = cfg::manipulable<cfg::option>;
-  using manipulable::field_setter;
 
   template <typename... Ts>
-  option(std::string const name, std::string const description, Ts&&... ts)
-      : cfg::option_base(name, description),
-        manipulable(std::forward<Ts>(ts)...) {
-    std::replace(std::begin(this->long_name), std::end(this->long_name), '.',
+  option(std::string name, std::string description, Ts&&... ts)
+      : name{std::move(name)}, description{std::move(description)} {
+    manipulable::apply(*this, std::forward<Ts>(ts)...);
+    std::replace(std::begin(this->longname), std::end(this->longname), '.',
                  '-');
-    std::replace(std::begin(this->long_name), std::end(this->long_name), '_',
+    std::replace(std::begin(this->longname), std::end(this->longname), '_',
                  '-');
   }
-
-  virtual ~option() {}
-
-  std::string name() const override;
-  unsigned    min_tokens() const override;
-  unsigned    max_tokens() const override;
-  bool        adjacent_tokens_only() const override;
-  bool        is_composing() const override;
-  bool        is_required() const override;
-  void        xparse(boost::any&                     value_store,
-                     std::vector<std::string> const& new_tokens) const override;
-  bool        apply_default(boost::any& value_store) const override;
-  void        notify(boost::any const& value_store) const override;
 };
+
 typedef std::vector<cfg::option> options;
 
-template <typename T> struct type_setter {
-  cfg::option::manipulator operator()() const {
-    return [=](cfg::option& o) -> void {
-      o.multitoken = false;
-      o.validate   = [](std::string const& s) {
-        return cfg::spore{cfg::lexical_cast<T>(s)};
-      };
-    };
-  }
-};
+auto const longname  = cfg::option::setter(&cfg::option::longname);
+auto const shortname = cfg::option::setter(&cfg::option::shortname);
+auto const default_  = cfg::option::setter(&cfg::option::default_);
+auto const implicit  = cfg::option::setter(&cfg::option::implicit);
+auto const composing = cfg::option::setter(&cfg::option::composing);
+auto const required  = cfg::option::setter(&cfg::option::required);
+auto const multiple  = cfg::option::setter(&cfg::option::multiple);
 
-template <typename T> struct type_setter<std::vector<T>> {
-  cfg::option::manipulator operator()() const {
-    return [=](cfg::option& o) -> void {
-      o.multitoken = true;
-      o.validate   = [](std::string const& s) {
-        return cfg::spore{cfg::lexical_cast<T>(s)};
-      };
-    };
-  }
-};
-
-static auto const default_ =
-    cfg::option::field_setter(&cfg::option::default_value);
-static auto const implicit =
-    cfg::option::field_setter(&cfg::option::implicit_value);
-static auto const composing =
-    cfg::option::field_setter(&cfg::option::composing);
-static auto const required = cfg::option::field_setter(&cfg::option::required);
-static auto const long_name =
-    cfg::option::field_setter(&cfg::option::long_name);
-static auto const short_name =
-    cfg::option::field_setter(&cfg::option::short_name);
-
-template <typename T> static cfg::option::manipulator of_type() {
-  return type_setter<T>()();
-}
-static auto const bool_switch = [](cfg::option& o) -> void {
-  cfg::of_type<bool>()(o);
+auto const bool_switch = [](cfg::option& o) {
   (cfg::default_ = false)(o);
   (cfg::implicit = true)(o);
   (cfg::composing = false)(o);
+  (cfg::multiple = false)(o);
 };
 }
 

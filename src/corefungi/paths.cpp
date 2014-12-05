@@ -6,7 +6,6 @@ namespace corefungi {
 namespace cfg = ::corefungi;
 
 namespace {
-namespace bpo = boost::program_options;
 namespace bfs = boost::filesystem;
 
 static bfs::path const expand(std::string const& path) {

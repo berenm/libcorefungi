@@ -8,7 +8,6 @@ namespace corefungi {
 namespace cfg = ::corefungi;
 
 namespace detail {
-
 template <typename T> struct reference {
 public:
   /** default constructors and assignment operators for reference */

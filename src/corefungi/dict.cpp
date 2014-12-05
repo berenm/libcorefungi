@@ -17,10 +17,10 @@ struct transform_result<std::pair<KeyT, ValueT>> {
 };
 
 /**
- * Transforms each element from the input container, using the given lambda
- * and return a container of results.
- * The returned container is an unordered_map if the lambda returns a pair,
- * or a vector otherwise.
+ * Transforms each element from the input container, using the given lambda and
+ * return a container of results.
+ * The returned container is an unordered_map if the lambda returns a pair, or a
+ * vector otherwise.
  */
 template <typename InT, typename OpT, typename ValT = typename InT::value_type>
 static auto transform(InT& i, OpT&& lambda) ->

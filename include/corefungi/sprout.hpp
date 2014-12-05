@@ -4,32 +4,22 @@
 #include <string>
 #include <vector>
 
-#include <boost/program_options.hpp>
-
-#include "corefungi/detail/singleton.hpp"
 #include "corefungi/node.hpp"
 #include "corefungi/option.hpp"
+#include "corefungi/detail/singleton.hpp"
 
 namespace corefungi {
 namespace cfg = ::corefungi;
-namespace bpo = ::boost::program_options;
 
-typedef std::pair<std::string, cfg::options> mold;
-
+using mold = std::pair<std::string, cfg::options>;
 struct sprouts : cfg::detail::singleton<cfg::sprouts> {
-  std::vector<std::function<bpo::options_description()>> builders;
-
-  static void add(cfg::mold&& m);
-  static void build(bpo::options_description& global);
+  std::vector<cfg::mold> molds;
 };
 
-struct sprout : cfg::detail::singleton<cfg::sprout> {
+struct sprout {
   sprout() = default;
   sprout(std::string const& s, cfg::options const& o) {
-    sprout::get_instance() = cfg::mold{s, o};
-  }
-  void operator=(cfg::mold&& m) const {
-    sprouts::add(std::forward<cfg::mold>(m));
+    sprouts::get_instance().molds.emplace_back(cfg::mold{s, o});
   }
 };
 }

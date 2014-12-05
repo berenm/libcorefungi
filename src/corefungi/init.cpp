@@ -26,12 +26,12 @@ static cfg::node root = cfg::dict{{cfg::spore{"system"}, cfg::node{}},
                                   {cfg::spore{"command"}, cfg::node{}}};
 // *INDENT-ON*/
 
-static corefungi::sprout const o = {
+auto const o = cfg::sprout{
     "General options",
-    {{"program.help", "produces this help message", cfg::long_name = "help",
-      cfg::short_name = "h", cfg::bool_switch},
-     {"program.config", "custom configuration file", cfg::long_name = "config",
-      cfg::short_name = "c"}}};
+    {{"program.help", "produces this help message", cfg::longname = "help",
+      cfg::shortname = "h", cfg::bool_switch},
+     {"program.config", "custom configuration file", cfg::longname = "config",
+      cfg::shortname = "c"}}};
 }
 
 cfg::node_ref system  = cfg::collect(cfg::root, "system")[0];
@@ -79,16 +79,7 @@ void init(std::string const& program, cfg::arguments const& arguments) {
   if (bfs::exists(global_config))
     yaml::read(global_config.string(), cfg::global);
 
-  bpo::options_description command_line_options;
-  cfg::sprouts::get_instance().build(command_line_options);
-
-  bpo::variables_map vm;
-  auto const&        options = bpo::command_line_parser(arguments)
-                            .options(command_line_options)
-                            .allow_unregistered()
-                            .run();
-  bpo::store(options, vm);
-  bpo::notify(vm);
+  parse(arguments);
 
   std::string const local_config =
       cfg::get("program.config", (program_path / config_name).string());
@@ -96,7 +87,77 @@ void init(std::string const& program, cfg::arguments const& arguments) {
     yaml::read(local_config, cfg::local);
 
   if (static_cast<bool>(cfg::get("program.help"))) {
-    std::cout << command_line_options << std::endl;
+    size_t column = 0;
+    for (auto&& m : sprouts::get_instance().molds) {
+      for (auto&& s : m.second) {
+        auto col = 4 + s.longname.size();
+        if (!s.shortname.empty())
+          col += 3 + s.shortname.size();
+
+        if (!std::get<0>(s.implicit)) {
+          if (s.multiple)
+            col += 10;
+          else
+            col += 6;
+
+          if (std::get<0>(s.default_))
+            col += 1 + std::get<1>(s.default_).size();
+        }
+
+        column = std::max(column, col);
+      }
+    }
+
+    for (auto&& m : sprouts::get_instance().molds) {
+      std::cerr << m.first << ":\n";
+
+      // Corefungi options:
+      //   --another-test         alternate config file
+      //   --test-size-t arg      a size_t parameter
+
+      // General options:
+      //   -h [ --help ]          produces this help message
+      //   -c [ --config ] arg    custom configuration file
+
+      for (auto&& s : m.second) {
+        if (!s.shortname.empty())
+          std::cerr << "  -" << s.shortname << ", --" << s.longname;
+        else
+          std::cerr << "  --" << s.longname;
+
+        if (!std::get<0>(s.implicit)) {
+          if (s.multiple)
+            std::cerr << " [args...";
+          else
+            std::cerr << " [arg";
+
+          if (std::get<0>(s.default_))
+            std::cerr << "=" << std::get<1>(s.default_);
+
+          std::cerr << "]";
+        }
+
+        auto col = 4 + s.longname.size();
+        if (!s.shortname.empty())
+          col += 3 + s.shortname.size();
+
+        if (!std::get<0>(s.implicit)) {
+          if (s.multiple)
+            col += 10;
+          else
+            col += 6;
+
+          if (std::get<0>(s.default_))
+            col += 1 + std::get<1>(s.default_).size();
+        }
+
+        std::cerr << std::string(column - col, ' ') << " " << s.description
+                  << "\n";
+      }
+
+      std::cerr << "\n";
+    }
+
     std::exit(0);
   }
 } // init

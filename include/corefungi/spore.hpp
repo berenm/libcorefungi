@@ -31,7 +31,10 @@ template <> struct is_spore_convertible<cfg::spore> : std::false_type {};
  */
 struct spore : std::string {
   spore()             = default;
+  spore(spore&&)      = default;
   spore(spore const&) = default;
+  spore& operator=(spore&&) = default;
+  spore& operator=(spore const&) = default;
 
   explicit spore(std::string const& s) : std::string(s) {}
 
@@ -40,9 +43,11 @@ struct spore : std::string {
       typename std::enable_if<cfg::is_spore_convertible<T>::value, void>::type;
 
   template <typename T, typename = if_sporable<T>>
-  explicit spore(T const& t) : std::string(cfg::lexical_cast<std::string>(t)) {}
+  explicit spore(T&& t)
+      : std::string(cfg::lexical_cast<std::string, T>(std::forward<T>(t))) {}
+
   template <typename T, typename = if_sporable<T>> operator T() const {
-    return cfg::lexical_cast<T, std::string>(*this);
+    return cfg::lexical_cast<T, std::string>(static_cast<std::string>(*this));
   }
 };
 

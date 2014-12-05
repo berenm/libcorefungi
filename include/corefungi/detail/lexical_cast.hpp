@@ -7,24 +7,24 @@ namespace corefungi {
 namespace cfg = ::corefungi;
 
 namespace detail {
-
 template <typename ToT, typename FromT>
-static inline ToT lexical_cast(FromT const& from) {
-  return boost::lexical_cast<ToT, FromT>(from);
+static inline ToT lexical_cast(FromT&& from) {
+  return boost::lexical_cast<ToT, FromT>(std::forward<FromT>(from));
 }
 
-template <>
-inline bool lexical_cast<bool, std::string>(std::string const& string) {
-  return string == "true"
-             ? true
-             : string == "false"
-                   ? false
-                   : boost::lexical_cast<bool, std::string>(string);
+template <> inline bool lexical_cast<bool, std::string>(std::string&& string) {
+  if (string.empty())
+    return false;
+  else if (string == "true")
+    return true;
+  else if (string == "false")
+    return false;
+  else
+    return boost::lexical_cast<bool, std::string>(string);
 }
 
-template <>
-inline std::string lexical_cast<std::string, bool>(bool const& boolean) {
-  return std::string{boolean ? "true" : "false"};
+template <> inline std::string lexical_cast<std::string, bool>(bool&& boolean) {
+  return boolean ? "true" : "false";
 }
 }
 
