@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_DETAIL_SINGLETON_HPP__
-#define __COREFUNGI_DETAIL_SINGLETON_HPP__
+#ifndef included_corefungi_detail_singleton_hpp
+#define included_corefungi_detail_singleton_hpp
 
 namespace corefungi {
 namespace detail {
@@ -31,4 +31,4 @@ template <class T> T& singleton<T>::instance = singleton<T>::get_instance();
 }
 }
 
-#endif // ifndef __COREFUNGI_DETAIL_SINGLETON_HPP__
+#endif // ifndef included_corefungi_detail_singleton_hpp

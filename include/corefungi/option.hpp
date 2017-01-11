@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_OPTION_HPP__
-#define __COREFUNGI_OPTION_HPP__
+#ifndef included_corefungi_option_hpp
+#define included_corefungi_option_hpp
 
 #include <string>
 #include <vector>
@@ -126,4 +126,4 @@ static auto const bool_switch = [](cfg::option& o) -> void {
 };
 }
 
-#endif // ifndef __COREFUNGI_OPTION_HPP__
+#endif // ifndef included_corefungi_option_hpp

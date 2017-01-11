@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_HPP__
-#define __COREFUNGI_HPP__
+#ifndef included_corefungi_hpp
+#define included_corefungi_hpp
 
 #include "corefungi/node.hpp"
 #include "corefungi/node_ref.hpp"
@@ -55,4 +55,4 @@ extern cfg::node_ref local;
 extern cfg::node_ref command;
 }
 
-#endif // ifndef __COREFUNGI_HPP__
+#endif // ifndef included_corefungi_hpp

@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_MUTATE_HPP__
-#define __COREFUNGI_MUTATE_HPP__
+#ifndef included_corefungi_mutate_hpp
+#define included_corefungi_mutate_hpp
 
 #include "corefungi/node.hpp"
 #include "corefungi/node_ref.hpp"
@@ -13,4 +13,4 @@ cfg::ref_list mutate(cfg::node& node, std::string const& path,
                      cfg::mutator const mutation);
 }
 
-#endif // ifndef __COREFUNGI_MUTATE_HPP__
+#endif // ifndef included_corefungi_mutate_hpp

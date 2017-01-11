@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_OSTREAM_HPP__
-#define __COREFUNGI_OSTREAM_HPP__
+#ifndef included_corefungi_ostream_hpp
+#define included_corefungi_ostream_hpp
 
 #include <cstdint>
 #include <ostream>
@@ -165,4 +165,4 @@ operator<<(std::basic_ostream<Cr, Tr>& s, std::function<R(Args...)> const& f) {
 }
 }
 
-#endif // ifndef __COREFUNGI_OSTREAM_HPP__
+#endif // ifndef included_corefungi_ostream_hpp

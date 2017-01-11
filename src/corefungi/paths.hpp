@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_PATHS_HPP__
-#define __COREFUNGI_PATHS_HPP__
+#ifndef included_corefungi_paths_hpp
+#define included_corefungi_paths_hpp
 
 #include <string>
 
@@ -15,4 +15,4 @@ std::string const system_cache_dir(std::string const& program);
 std::string const system_data_dir(std::string const& program);
 }
 
-#endif // ifndef __COREFUNGI_PATHS_HPP__
+#endif // ifndef included_corefungi_paths_hpp

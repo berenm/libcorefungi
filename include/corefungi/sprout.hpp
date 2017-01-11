@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_SPROUT_HPP__
-#define __COREFUNGI_SPROUT_HPP__
+#ifndef included_corefungi_sprout_hpp
+#define included_corefungi_sprout_hpp
 
 #include <string>
 #include <vector>
@@ -34,4 +34,4 @@ struct sprout : cfg::detail::singleton<cfg::sprout> {
 };
 }
 
-#endif // ifndef __COREFUNGI_SPROUT_HPP__
+#endif // ifndef included_corefungi_sprout_hpp

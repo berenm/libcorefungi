@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_DETAIL_REFERENCE_HPP__
-#define __COREFUNGI_DETAIL_REFERENCE_HPP__
+#ifndef included_corefungi_detail_reference_hpp
+#define included_corefungi_detail_reference_hpp
 
 #include <iosfwd>
 #include <utility>
@@ -74,4 +74,4 @@ operator<<(std::basic_ostream<Cr, Tr>& s, detail::reference<T> const& r) {
 }
 }
 
-#endif // ifndef __COREFUNGI_DETAIL_REFERENCE_HPP__
+#endif // ifndef included_corefungi_detail_reference_hpp

@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_DETAIL_MANIPULABLE_HPP__
-#define __COREFUNGI_DETAIL_MANIPULABLE_HPP__
+#ifndef included_corefungi_detail_manipulable_hpp
+#define included_corefungi_detail_manipulable_hpp
 
 #include <functional>
 
@@ -44,4 +44,4 @@ template <typename T> struct manipulable {
 };
 }
 
-#endif // ifndef __COREFUNGI_DETAIL_MANIPULABLE_HPP__
+#endif // ifndef included_corefungi_detail_manipulable_hpp

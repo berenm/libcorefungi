@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_NODE_REF_HPP__
-#define __COREFUNGI_NODE_REF_HPP__
+#ifndef included_corefungi_node_ref_hpp
+#define included_corefungi_node_ref_hpp
 
 #include <vector>
 #include <unordered_map>
@@ -45,4 +45,4 @@ template <typename U> U& get(corefungi::node_ref& n) {
 }
 }
 
-#endif // ifndef __COREFUNGI_NODE_REF_HPP__
+#endif // ifndef included_corefungi_node_ref_hpp

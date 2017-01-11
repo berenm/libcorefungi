@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_YAML_PARSER_HPP__
-#define __COREFUNGI_YAML_PARSER_HPP__
+#ifndef included_corefungi_yaml_parser_hpp
+#define included_corefungi_yaml_parser_hpp
 
 #include "corefungi.hpp"
 
@@ -134,4 +134,4 @@ void write(std::string const& file_name, cfg::node const& node) {
 }
 }
 
-#endif // ifndef __COREFUNGI_YAML_PARSER_HPP__
+#endif // ifndef included_corefungi_yaml_parser_hpp

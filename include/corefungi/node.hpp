@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_NODE_HPP__
-#define __COREFUNGI_NODE_HPP__
+#ifndef included_corefungi_node_hpp
+#define included_corefungi_node_hpp
 
 #include <vector>
 #include <unordered_map>
@@ -31,4 +31,4 @@ template <typename T> static inline bool is_a(cfg::node const& n) {
 }
 }
 
-#endif // ifndef __COREFUNGI_NODE_HPP__
+#endif // ifndef included_corefungi_node_hpp

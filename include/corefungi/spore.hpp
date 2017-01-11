@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_SPORE_HPP__
-#define __COREFUNGI_SPORE_HPP__
+#ifndef included_corefungi_spore_hpp
+#define included_corefungi_spore_hpp
 
 #include <string>
 #include <vector>
@@ -61,4 +61,4 @@ namespace std {
 template <> struct hash<corefungi::spore> : hash<string> {};
 }
 
-#endif // ifndef __COREFUNGI_SPORE_HPP__
+#endif // ifndef included_corefungi_spore_hpp

@@ -1,5 +1,5 @@
-#ifndef __COREFUNGI_DETAIL_LEXICAL_CAST_HPP__
-#define __COREFUNGI_DETAIL_LEXICAL_CAST_HPP__
+#ifndef included_corefungi_detail_lexical_cast_hpp
+#define included_corefungi_detail_lexical_cast_hpp
 
 #include <boost/lexical_cast.hpp>
 
@@ -31,4 +31,4 @@ inline std::string lexical_cast<std::string, bool>(bool const& boolean) {
 using detail::lexical_cast;
 }
 
-#endif // ifndef __COREFUNGI_DETAIL_LEXICAL_CAST_HPP__
+#endif // ifndef included_corefungi_detail_lexical_cast_hpp
