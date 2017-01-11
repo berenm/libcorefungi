@@ -72,6 +72,7 @@ struct option : cfg::option_base,
   std::string name() const override;
   unsigned    min_tokens() const override;
   unsigned    max_tokens() const override;
+  bool        adjacent_tokens_only() const override;
   bool        is_composing() const override;
   bool        is_required() const override;
   void        xparse(boost::any&                     value_store,

@@ -28,6 +28,8 @@ unsigned option::max_tokens() const {
   return std::get<0>(this->implicit_value) ? 0 : (this->multitoken ? -1 : 1);
 }
 
+bool option::adjacent_tokens_only() const { return false; }
+
 bool option::is_composing() const { return this->composing; }
 
 bool option::is_required() const { return this->required; }
