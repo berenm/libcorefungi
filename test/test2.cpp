@@ -4,15 +4,15 @@
 #include <iostream>
 
 // 2. spread some sprouts in your libraries and executables.
-namespace cfg = ::corefungi;
-cfg::sprout const options
-  = {"My library options",
-     {{"my.switch", "do something if this switch is used", cfg::bool_switch},
-      {"my.integer.default", "an integer parameter with a default value",
-       cfg::of_type< size_t >(), cfg::default_ = 5},
-      {"my.integers", "another integer parameter with multiple values",
-       cfg::of_type< std::vector< size_t > >(), cfg::composing = true,
-       cfg::long_name = "integer", cfg::short_name = "i"}}};
+namespace cfg             = ::corefungi;
+cfg::sprout const options = {
+    "My library options",
+    {{"my.switch", "do something if this switch is used", cfg::bool_switch},
+     {"my.integer.default", "an integer parameter with a default value",
+      cfg::of_type<size_t>(), cfg::default_ = 5},
+     {"my.integers", "another integer parameter with multiple values",
+      cfg::of_type<std::vector<size_t>>(), cfg::composing = true,
+      cfg::long_name = "integer", cfg::short_name = "i"}}};
 
 int main(int argc, char const* argv[]) {
   // 3. fertilize the fungi from the command-line.
@@ -22,11 +22,11 @@ int main(int argc, char const* argv[]) {
   size_t default_integer = cfg::get("my.integer.default");
   std::cout << "my.integer.default is: " << default_integer << std::endl;
 
-  std::vector< size_t > integers;
-  auto const&           nodes = cfg::collect("my.integers.#");
+  std::vector<size_t> integers;
+  auto const&         nodes = cfg::collect("my.integers.#");
 
   for (auto const& node : nodes) {
-    size_t const integer = boost::get< cfg::spore >(node);
+    size_t const integer = boost::get<cfg::spore>(node);
     integers.emplace_back(integer);
   }
 
