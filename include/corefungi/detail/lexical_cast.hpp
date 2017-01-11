@@ -8,21 +8,24 @@ namespace corefungi {
 
   namespace detail {
 
-    template< typename ToT, typename FromT >
+    template < typename ToT, typename FromT >
     static inline ToT lexical_cast(FromT const& from) {
       return boost::lexical_cast< ToT, FromT >(from);
     }
 
-    template< >
+    template <>
     inline bool lexical_cast< bool, std::string >(std::string const& string) {
-      return string == "true" ? true : string == "false" ? false : boost::lexical_cast< bool, std::string >(string);
+      return string == "true"
+               ? true
+               : string == "false"
+                   ? false
+                   : boost::lexical_cast< bool, std::string >(string);
     }
 
-    template< >
+    template <>
     inline std::string lexical_cast< std::string, bool >(bool const& boolean) {
-      return std::string { boolean ? "true" : "false" };
+      return std::string{boolean ? "true" : "false"};
     }
-
   }
 
   using detail::lexical_cast;

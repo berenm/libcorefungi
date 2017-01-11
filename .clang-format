@@ -1,0 +1,8 @@
+---
+SortIncludes: false
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+PointerAlignment: Left
+TabWidth: 2
+UseTab: Never
+...

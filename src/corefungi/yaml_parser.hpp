@@ -3,8 +3,8 @@
 
 #include "corefungi.hpp"
 
-#include <yaml-cpp/yaml.h>
 #include <fstream>
+#include <yaml-cpp/yaml.h>
 
 namespace corefungi {
   namespace cfg = ::corefungi;
@@ -14,8 +14,10 @@ namespace corefungi {
     cfg::node read_helper(YAML::Node const& node) {
       if (node.Type() == YAML::NodeType::Map) {
         cfg::dict v;
-        for (YAML::const_iterator it = node.begin(), end = node.end(); it != end; ++it) {
-          v.emplace(cfg::spore {it->first.as< std::string >()}, read_helper(it->second));
+        for (YAML::const_iterator it = node.begin(), end = node.end();
+             it != end; ++it) {
+          v.emplace(cfg::spore{it->first.as< std::string >()},
+                    read_helper(it->second));
         }
 
         return v;
@@ -31,9 +33,9 @@ namespace corefungi {
       }
 
       if (node.Type() == YAML::NodeType::Scalar)
-        return cfg::spore {node.as< std::string >()};
+        return cfg::spore{node.as< std::string >()};
 
-      return cfg::node {};
+      return cfg::node{};
     } // read_helper
 
     void read_internal(std::istream& stream, cfg::node& n, std::string const&) {
@@ -47,8 +49,7 @@ namespace corefungi {
     void read(std::string const& file_name, cfg::node& n) {
       std::ifstream stream(file_name.c_str());
 
-      if (!stream)
-        throw std::runtime_error("cannot open file: " + file_name);
+      if (!stream) throw std::runtime_error("cannot open file: " + file_name);
 
       read_internal(stream, n, file_name);
     }
@@ -57,13 +58,12 @@ namespace corefungi {
       if (is_a< spore >(node)) {
         spore const& v = boost::get< spore >(node);
 
-#define YAML_TRY_GET(type_m)                     \
-  do {                                           \
-    try {                                        \
-      stream << static_cast< type_m >(v);        \
-      return;                                    \
-    } catch (boost::bad_lexical_cast const& e) { \
-    }                                            \
+#define YAML_TRY_GET(type_m)                      \
+  do {                                            \
+    try {                                         \
+      stream << static_cast< type_m >(v);         \
+      return;                                     \
+    } catch (boost::bad_lexical_cast const& e) {} \
   } while (0)
 
         YAML_TRY_GET(bool);
@@ -79,8 +79,7 @@ namespace corefungi {
       } else if (is_a< list >(node)) {
         list const& v = boost::get< list >(node);
 
-        if (v.empty())
-          stream << YAML::Flow;
+        if (v.empty()) stream << YAML::Flow;
 
         stream << YAML::BeginSeq;
         for (auto const& n : v) {
@@ -91,8 +90,7 @@ namespace corefungi {
       } else if (is_a< dict >(node)) {
         dict const& v = boost::get< dict >(node);
 
-        if (v.empty())
-          stream << YAML::Flow;
+        if (v.empty()) stream << YAML::Flow;
 
         stream << YAML::BeginMap;
         for (auto const& p : v) {
@@ -101,11 +99,11 @@ namespace corefungi {
           write_helper(stream, p.second);
         }
         stream << YAML::EndMap;
-
       }
     } // write_helper
 
-    void write_internal(std::ostream& stream, cfg::node const& node, std::string const& file_name) {
+    void write_internal(std::ostream& stream, cfg::node const& node,
+                        std::string const& file_name) {
       YAML::Emitter out;
 
       out << YAML::BeginDoc;
@@ -113,8 +111,7 @@ namespace corefungi {
       out << YAML::EndDoc;
 
       stream << out.c_str();
-      if (!stream.good())
-        throw std::runtime_error("write error: " + file_name);
+      if (!stream.good()) throw std::runtime_error("write error: " + file_name);
     }
 
     void write(std::ostream& stream, cfg::node const& node) {
@@ -124,12 +121,10 @@ namespace corefungi {
     void write(std::string const& file_name, cfg::node const& node) {
       std::ofstream stream(file_name.c_str());
 
-      if (!stream)
-        throw std::runtime_error("cannot open file: " + file_name);
+      if (!stream) throw std::runtime_error("cannot open file: " + file_name);
 
       write_internal(stream, node, file_name);
     }
-
   }
 }
 

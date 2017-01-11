@@ -3,12 +3,10 @@
 
 #include <iostream>
 
-corefungi::sprout const options = {
-  "Corefungi options", {
-    { "another.test",  "alternate config file", corefungi::bool_switch },
-    { "test.size_t",   "a size_t parameter", corefungi::of_type< size_t >() }
-  }
-};
+corefungi::sprout const options
+  = {"Corefungi options",
+     {{"another.test", "alternate config file", corefungi::bool_switch},
+      {"test.size_t", "a size_t parameter", corefungi::of_type< size_t >()}}};
 
 int main(int argc, char const* argv[]) {
   namespace cfg = ::corefungi;
@@ -32,17 +30,16 @@ int main(int argc, char const* argv[]) {
   bool result = cfg::get("another.test");
 
   // *INDENT-OFF*/
-  n = cfg::dict {
-    { cfg::spore {"value"}, cfg::value { "bla" } },
-    { cfg::spore {"list-value"}, cfg::list { cfg::value {"bar"}, cfg::value {"bar"} } },
-    { cfg::spore {"dict-value"}, cfg::dict { { cfg::spore {"bar"}, cfg::value {"bar"} } } },
-    { cfg::spore {"dict-value-2"},
-      cfg::dict {
-        { cfg::spore {"bar"}, cfg::list { cfg::value {"bar0"}, cfg::value {"bar1"} } }
-      }
-    }
-  };
- // *INDENT-ON*/
+  n = cfg::dict{{cfg::spore{"value"}, cfg::value{"bla"}},
+                {cfg::spore{"list-value"},
+                 cfg::list{cfg::value{"bar"}, cfg::value{"bar"}}},
+                {cfg::spore{"dict-value"},
+                 cfg::dict{{cfg::spore{"bar"}, cfg::value{"bar"}}}},
+                {cfg::spore{"dict-value-2"},
+                 cfg::dict{
+                   {cfg::spore{"bar"},
+                    cfg::list{cfg::value{"bar0"}, cfg::value{"bar1"}}}}}};
+  // *INDENT-ON*/
 
   std::cout << cfg::collect(n, "*.bar.#0") << std::endl;
 
@@ -52,7 +49,7 @@ int main(int argc, char const* argv[]) {
   auto sprinklings = cfg::grow(m, "foo.#.bla");
   std::cout << sprinklings << std::endl;
   for (auto& n : sprinklings) {
-    n = cfg::spore {"bla"};
+    n = cfg::spore{"bla"};
   }
 
   std::cout << m << std::endl;
@@ -87,7 +84,7 @@ int main(int argc, char const* argv[]) {
   // }
 
   try {
-    auto const   sp = cfg::spore {"0"};
+    auto const   sp = cfg::spore{"0"};
     size_t const v  = sp;
 
     std::cout << sp << ": " << v << std::endl;

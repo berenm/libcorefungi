@@ -19,7 +19,8 @@ namespace corefungi {
     return boost::get< cfg::spore >(collection.front());
   }
 
-  cfg::spore get(cfg::node& node, std::string const& path, cfg::spore const& default_value) {
+  cfg::spore get(cfg::node& node, std::string const& path,
+                 cfg::spore const& default_value) {
     cfg::node     n          = default_value;
     cfg::ref_list collection = cfg::collect(node, path);
 
@@ -31,10 +32,12 @@ namespace corefungi {
   cfg::ref_list collect(std::string const& path) {
     cfg::ref_list refs;
 
-    for (auto& n : cfg::ref_list { cfg::command, cfg::local, cfg::global, cfg::system }) {
+    for (auto& n :
+         cfg::ref_list{cfg::command, cfg::local, cfg::global, cfg::system}) {
       try {
         auto const collection = cfg::collect(n, path);
-        std::copy(collection.begin(), collection.end(), std::back_inserter(refs));
+        std::copy(collection.begin(), collection.end(),
+                  std::back_inserter(refs));
       } catch (boost::bad_get const&) {}
     }
 
@@ -58,5 +61,4 @@ namespace corefungi {
 
     return boost::get< cfg::spore >(collection.front());
   }
-
 }

@@ -6,9 +6,9 @@
 
 #include <boost/program_options.hpp>
 
+#include "corefungi/detail/singleton.hpp"
 #include "corefungi/node.hpp"
 #include "corefungi/option.hpp"
-#include "corefungi/detail/singleton.hpp"
 
 namespace corefungi {
   namespace cfg = ::corefungi;
@@ -25,10 +25,13 @@ namespace corefungi {
 
   struct sprout : cfg::detail::singleton< cfg::sprout > {
     sprout() = default;
-    sprout(std::string const& s, cfg::options const& o) { sprout::get_instance() = cfg::mold { s, o }; }
-    void operator=(cfg::mold&& m) const { sprouts::add(std::forward< cfg::mold >(m)); }
+    sprout(std::string const& s, cfg::options const& o) {
+      sprout::get_instance() = cfg::mold{s, o};
+    }
+    void operator=(cfg::mold&& m) const {
+      sprouts::add(std::forward< cfg::mold >(m));
+    }
   };
-
 }
 
 #endif // ifndef __COREFUNGI_SPROUT_HPP__

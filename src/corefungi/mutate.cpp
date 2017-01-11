@@ -7,7 +7,8 @@ namespace corefungi {
 
   namespace {
 
-    static void collect(cfg::list& list, std::string const& step, cfg::ref_list& refs) {
+    static void collect(cfg::list& list, std::string const& step,
+                        cfg::ref_list& refs) {
       if (step.size() > 1) {
         size_t const index = boost::lexical_cast< size_t >(step.substr(1));
         refs.emplace_back(list[index]);
@@ -19,9 +20,10 @@ namespace corefungi {
       }
     }
 
-    static void collect(cfg::dict& dict, std::string const& step, cfg::ref_list& refs) {
+    static void collect(cfg::dict& dict, std::string const& step,
+                        cfg::ref_list& refs) {
       if (step != "*") {
-        auto const spore = cfg::spore {step};
+        auto const spore = cfg::spore{step};
         if (dict.find(spore) != dict.end())
           refs.emplace_back(dict.at(std::move(spore)));
 
@@ -35,14 +37,14 @@ namespace corefungi {
     typedef std::vector< std::string > step_list;
   }
 
-  cfg::ref_list mutate(cfg::node& node, std::string const& path, cfg::mutator const mutation) {
-    cfg::ref_list  refs = { cfg::node_ref { node } };
+  cfg::ref_list mutate(cfg::node& node, std::string const& path,
+                       cfg::mutator const mutation) {
+    cfg::ref_list  refs = {cfg::node_ref{node}};
     cfg::step_list steps;
     boost::split(steps, path, boost::is_any_of("."), boost::token_compress_on);
 
     for (auto const& step : steps) {
-      if (step.empty())
-        continue;
+      if (step.empty()) continue;
 
       cfg::ref_list subrefs = {};
 
@@ -62,5 +64,4 @@ namespace corefungi {
 
     return refs;
   }
-
 }

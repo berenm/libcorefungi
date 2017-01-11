@@ -27,20 +27,23 @@ namespace corefungi {
   cfg::spore    get(std::string const& path);
   cfg::spore    get(std::string const& path, cfg::spore const& default_value);
 
-  template< typename T, typename = cfg::spore::if_sporable< T >  >
-  static inline cfg::spore get(std::string const& path, T&& default_value)
-  { return cfg::get(path, cfg::spore {std::forward< T >(default_value)}); }
+  template < typename T, typename = cfg::spore::if_sporable< T > >
+  static inline cfg::spore get(std::string const& path, T&& default_value) {
+    return cfg::get(path, cfg::spore{std::forward< T >(default_value)});
+  }
 
   cfg::ref_list collect(cfg::node& node, std::string const& path);
   cfg::spore    get(cfg::node& node, std::string const& path);
-  cfg::spore    get(cfg::node& node, std::string const& path, cfg::spore const& default_value);
+  cfg::spore    get(cfg::node& node, std::string const& path,
+                    cfg::spore const& default_value);
 
   cfg::ref_list grow(cfg::node& node, std::string const& path);
-  void          put(cfg::node& node, std::string const& path, cfg::spore const& value);
+  void put(cfg::node& node, std::string const& path, cfg::spore const& value);
 
-  template< typename T, typename = cfg::spore::if_sporable< T >  >
-  static inline void put(cfg::node& node, std::string const& path, T&& value)
-  { cfg::put(node, path, cfg::spore {std::forward< T >(value)}); }
+  template < typename T, typename = cfg::spore::if_sporable< T > >
+  static inline void put(cfg::node& node, std::string const& path, T&& value) {
+    cfg::put(node, path, cfg::spore{std::forward< T >(value)});
+  }
 
   cfg::spore_list keys(cfg::node& node);
   cfg::ref_list   values(cfg::node& node);
@@ -50,7 +53,6 @@ namespace corefungi {
   extern cfg::node_ref global;
   extern cfg::node_ref local;
   extern cfg::node_ref command;
-
 }
 
 #endif // ifndef __COREFUNGI_HPP__
