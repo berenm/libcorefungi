@@ -14,7 +14,7 @@ Core Fungi: C++11 simple configuration library.
 
 
 USAGE
-````````````````````````````
+-------------------------------------------------------------------------------
 .. code:: cpp
 
   // 1. include the corefungi.hpp header.
@@ -72,7 +72,7 @@ And at run-time:
 
 
 STATIC INITIALIZATION CAVEAT
-````````````````````````````
+-------------------------------------------------------------------------------
 The automatic option registration, through the cfg::sprout type, relies on static
 initialisation mechanism. However, the C++ standard allows a linker to drop the code
 of any compiled translation unit if it can prove that no code from it is used anywhere
@@ -86,8 +86,9 @@ sure they will grow if ever the functionality is used.
 Or one can even see that as a feature to disable sprouts from unused libraries...
 
 
-COPYING INFORMATION
-````````````````````````````
- Distributed under the Boost Software License, Version 1.0.
+LICENSE
+-------------------------------------------------------------------------------
 
- See accompanying file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt
+ This is free and unencumbered software released into the public domain.
+
+ See accompanying file UNLICENSE or copy at http://unlicense.org/UNLICENSE
