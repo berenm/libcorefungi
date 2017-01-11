@@ -1,7 +1,4 @@
-[submodule "cmake/extra"]
-	path = cmake/extra
-	url = git://github.com/berenm/cmake-extra.git
-[submodule "lib/yaml-cpp"]
-	path = lib/yaml-cpp
-	branch = c++11
-	url = git://github.com/berenm/yaml-cpp11.git
+[submodule "packages/system"]
+	path = packages/system
+	url = ../cmake-build-package-system
+	branch = master
