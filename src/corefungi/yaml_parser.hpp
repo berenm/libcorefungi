@@ -32,10 +32,13 @@ cfg::node read_helper(YAML::Node const& node) {
     return v;
   }
 
+  if (node.Type() == YAML::NodeType::Null)
+    return cfg::nothing{};
+
   if (node.Type() == YAML::NodeType::Scalar)
     return cfg::spore{node.as<std::string>()};
 
-  return cfg::node{};
+  return cfg::nothing{};
 } // read_helper
 
 void read_internal(std::istream& stream, cfg::node& n, std::string const&) {
