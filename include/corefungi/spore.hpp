@@ -44,10 +44,16 @@ struct spore : std::string {
 
   template <typename T, typename = if_sporable<T>>
   explicit spore(T&& t)
-      : std::string(cfg::lexical_cast<std::string, T>(std::forward<T>(t))) {}
+      : std::string(cfg::lexical_cast<std::string, std::decay_t<T>>(
+            std::forward<T>(t))) {}
+
+  spore& operator=(auto&& t) {
+    return operator=(spore(std::forward<decltype(t)>(t))), *this;
+  }
 
   template <typename T, typename = if_sporable<T>> operator T() const {
-    return cfg::lexical_cast<T, std::string>(static_cast<std::string>(*this));
+    return cfg::lexical_cast<std::decay_t<T>, std::string>(
+        static_cast<std::string>(*this));
   }
 };
 
@@ -60,10 +66,10 @@ operator<<(std::basic_ostream<Cr, Tr>& s, cfg::spore const& sp) {
 }
 
 typedef std::vector<cfg::spore> spore_list;
-}
+} // namespace corefungi
 
 namespace std {
 template <> struct hash<corefungi::spore> : hash<string> {};
-}
+} // namespace std
 
 #endif // ifndef included_corefungi_spore_hpp

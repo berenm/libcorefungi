@@ -59,8 +59,9 @@ void parse(cfg::arguments args) {
       optnames.emplace_back("--" + s.longname);
       options[optnames.back()] = s;
 
-      if (s.has_default())
-        cfg::put(cfg::command, s.name, std::get<1>(s.default_));
+      if (s.has_default()) {
+        cfg::put(cfg::command, s.name, s.default_.value);
+      }
 
       if (s.shortname == "")
         continue;
@@ -83,7 +84,7 @@ void parse(cfg::arguments args) {
     if (!option.composing && !list.empty())
       cfg::put(cfg::command, option.name, "");
     if (option.is_implicit())
-      cfg::put(cfg::command, option.name, std::get<1>(option.implicit));
+      cfg::put(cfg::command, option.name, option.implicit.value);
   };
 
   auto const optvalue = [](auto&& option, auto&& value) {

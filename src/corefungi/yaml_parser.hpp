@@ -134,7 +134,7 @@ void write(std::string const& file_name, cfg::node const& node) {
 
   write_internal(stream, node, file_name);
 }
-}
-}
+} // namespace yaml
+} // namespace corefungi
 
 #endif // ifndef included_corefungi_yaml_parser_hpp

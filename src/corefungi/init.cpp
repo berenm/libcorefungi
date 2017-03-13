@@ -32,7 +32,7 @@ auto const o = cfg::sprout{
       cfg::shortname = "h", cfg::bool_switch},
      {"program.config", "custom configuration file", cfg::longname = "config",
       cfg::shortname = "c"}}};
-}
+} // namespace
 
 cfg::node_ref system  = cfg::collect(cfg::root, "system")[0];
 cfg::node_ref global  = cfg::collect(cfg::root, "global")[0];
@@ -94,14 +94,14 @@ void init(std::string const& program, cfg::arguments const& arguments) {
         if (!s.shortname.empty())
           col += 3 + s.shortname.size();
 
-        if (!std::get<0>(s.implicit)) {
+        if (!s.implicit.has_value) {
           if (s.multiple)
             col += 10;
           else
             col += 6;
 
-          if (std::get<0>(s.default_))
-            col += 1 + std::get<1>(s.default_).size();
+          if (s.default_.has_value)
+            col += 1 + s.default_.value.size();
         }
 
         column = std::max(column, col);
@@ -125,14 +125,14 @@ void init(std::string const& program, cfg::arguments const& arguments) {
         else
           std::cerr << "  --" << s.longname;
 
-        if (!std::get<0>(s.implicit)) {
+        if (!s.implicit.has_value) {
           if (s.multiple)
             std::cerr << " [args...";
           else
             std::cerr << " [arg";
 
-          if (std::get<0>(s.default_))
-            std::cerr << "=" << std::get<1>(s.default_);
+          if (s.default_.has_value)
+            std::cerr << "=" << s.default_.value;
 
           std::cerr << "]";
         }
@@ -141,14 +141,14 @@ void init(std::string const& program, cfg::arguments const& arguments) {
         if (!s.shortname.empty())
           col += 3 + s.shortname.size();
 
-        if (!std::get<0>(s.implicit)) {
+        if (!s.implicit.has_value) {
           if (s.multiple)
             col += 10;
           else
             col += 6;
 
-          if (std::get<0>(s.default_))
-            col += 1 + std::get<1>(s.default_).size();
+          if (s.default_.has_value)
+            col += 1 + s.default_.value.size();
         }
 
         std::cerr << std::string(column - col, ' ') << " " << s.description
@@ -161,4 +161,4 @@ void init(std::string const& program, cfg::arguments const& arguments) {
     std::exit(0);
   }
 } // init
-}
+} // namespace corefungi

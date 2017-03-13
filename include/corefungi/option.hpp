@@ -11,14 +11,21 @@ namespace corefungi {
 namespace cfg = ::corefungi;
 
 struct option : cfg::manipulable<cfg::option> {
-  struct optional : std::tuple<bool, cfg::spore> {
-    using tuple = std::tuple<bool, cfg::spore>;
+  struct optional {
+    optional()                = default;
+    optional(optional&&)      = default;
+    optional(optional const&) = default;
+    optional& operator=(optional&&) = default;
+    optional& operator=(optional const&) = default;
 
-    optional(bool b, cfg::spore v) : tuple{b, std::move(v)} {}
-
-    template <typename T> optional& operator=(T v) {
-      return tuple::operator=(tuple{true, cfg::spore{v}}), *this;
+    optional(auto&& value)
+        : has_value{true}, value{std::forward<decltype(value)>(value)} {}
+    optional& operator=(auto&& value) {
+      return operator=(optional{std::forward<decltype(value)>(value)}), *this;
     }
+
+    bool       has_value = false;
+    cfg::spore value     = {};
   };
 
   std::string name;
@@ -27,14 +34,14 @@ struct option : cfg::manipulable<cfg::option> {
   std::string shortname = "";
   std::string longname  = name;
 
-  optional default_  = {false, {}};
-  optional implicit  = {false, {}};
+  optional default_  = {};
+  optional implicit  = {};
   bool     composing = false;
   bool     required  = false;
   bool     multiple  = false;
 
-  bool has_default() const { return std::get<0>(this->default_); }
-  bool is_implicit() const { return std::get<0>(this->implicit); }
+  bool has_default() const { return this->default_.has_value; }
+  bool is_implicit() const { return this->implicit.has_value; }
 
   option()              = default;
   option(option const&) = default;
@@ -71,6 +78,6 @@ auto const bool_switch = [](cfg::option& o) {
   (cfg::composing = false)(o);
   (cfg::multiple = false)(o);
 };
-}
+} // namespace corefungi
 
 #endif // ifndef included_corefungi_option_hpp
